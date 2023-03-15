@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .menu{
+    display: inline-grid;
+    background-color: rgb(41, 42, 71);
+    width: 40vw;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(3, 1, 20, 0.932);
+    
+    }
+    .img_menu{
+    margin-top: 1vh;
+    width: 11vh;
+    height: 11vh;
+    margin-bottom: 1vh;
+    
+    }
+    .menutext{
+    font-weight: bold;
+    font-size: 80%;
+    color: rgb(255, 255, 255);
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2vh;
+    }
+    
+    .img_container{
+        width: 100%;
+        text-align: center;
+    }
+    </style>
+</head>
+<body>
+    {%for pod in pods%}
+    <div class='menu'>
+        <div class='img_container'>
+            <img src ={{pod.picture}} class='img_menu' alt=""/>
+        </div>
+      
+        <div class='menutext'><a href="{%url 'homepage'%}">{{pod.name}}</a></div>
+    </div>
+    {%endfor%}
+</body>
+</html>
