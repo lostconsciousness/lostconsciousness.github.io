@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from main.models import Podik
+from django.core import serializers
 
 
 def heater(request):
-    context = {
-        "pods": Podik.objects.all().filter(categoryId = 238)
-    }
-    return render(request, 'main/heater.html', context)
+    return render(request, 'main/heater.html', {})
 
 def iqos(request):
     context = {
@@ -30,5 +28,14 @@ def powerbanks(request):
     }
 
 def homepage(request):
-    return render(request, 'main/homepage.html', {})
-# Create your views here.
+    allObjects = Podik.objects.all()
+    pods = serializers.serialize('json', allObjects)
+    heaters = serializers.serialize('json', allObjects.filter(categoryId = 238))
+    iqos = serializers.serialize('json', allObjects.filter(categoryId = 282))
+    print(pods)
+    context = {
+        "pods": pods,
+        "heaters": heaters,
+        "iqos": iqos,
+    }
+    return render(request, 'main/homepage.html', context)

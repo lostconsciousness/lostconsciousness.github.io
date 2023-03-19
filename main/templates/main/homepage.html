@@ -1,62 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <style>
-        .menu{
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #E1D7C6;
+}
+
+.grid {
+    grid-gap: 1vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: center;
+    margin-left: 7%;
+    margin-right: 7%;
+
+}
+
+.img_container {
+    margin-top: 1vh;
+    width: 100%;
+    text-align: center;
+}
+
+.menu {
     display: inline-grid;
-    background-color: rgb(41, 42, 71);
+    background-color: #e1d7d2;
     width: 40vw;
     justify-content: center;
     align-items: center;
-    border: 1px solid rgba(3, 1, 20, 0.932);
-    
-    }
-    .img_menu{
-    margin-top: 1vh;
-    width: 11vh;
-    height: 11vh;
-    margin-bottom: 1vh;
-    
-    }
-    .menutext{
+    border: 3px solid rgb(255 255 255 / 60%);
+    border-radius: 14%;
+}
+
+.ctg {
+    display: inline-grid;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    grid-column: span 2;
     font-weight: bold;
-    font-size: 80%;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    margin-bottom: 2vh;
+    font-size: 3vh;
+}
+
+.menutext {
+    font-weight: bold;
+    font-size: 100%;
+    color: rgb(0, 0, 0);
     width: 100%;
     text-align: center;
     margin-bottom: 2vh;
-    }
-    
-    .img_container{
-        width: 100%;
-        text-align: center;
-    }
+}
+
+#menu {
+    margin-left: 4vh;
+    margin-right: 4vh;
+}
+
+.tovar {
+    width: 100%;
+    height: 7vh;
+    font-size: 3vh;
+    color: white;
+    justify-content: center;
+    text-align: center;
+    background-color: rgb(41, 42, 71);
+    border: 1px solid rgba(3, 1, 20, 0.932);
+    margin-top: 2vh;
+    font-weight: bold;
+    display: grid;
+    align-content: space-around;
+}
+
+a:link {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+}
+
+
+.img_menu {
+    margin-top: 0vh;
+    width: 13vh;
+    height: 13vh;
+    margin-bottom: 1vh;
+
+}
+
+.tovar_button {
+    display: inline-grid;
+    background-color: #e1d7d2;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid rgb(255 255 255 / 60%);
+    border-radius: 5%;
+    grid-column: span 2;
+    margin: auto;
+    font-weight: bold;
+    font-size: 100%;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    margin-bottom: 2vh;
+}
+
+.button_card{
+    width: 80%;
+    border: 0px solid #60543d;
+    color: black;
+    background: #ef9c1e;
+    height: 4vh;
+    border-radius: 10%;
+    font-size: 3vh;
+}
+
+.div_btn{
+    justify-content: center;
+    display: flex;
+    height: 6vh;
+}
+
+.back_to_menu{
+    width: 60%;
+    height: 100%;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    margin-bottom: 2vh;
+    font-size: 3vh;
+    margin-left: 7%;
+    display: inline-block;
+    top: 2vh;
+    position: absolute
+
+}
+.header{
+    position: fixed;
+    width: 100%;
+    height: 8%;
+    background: #E1D7C6;
+    z-index: 11;
+}
+.page{
+    position: relative;
+    top: 8vh;
+}
+.arrow{
+    width: 5vh;
+    height: 5vh;
+    display: inline-block;
+    vertical-align: middle;
+}
     </style>
 </head>
-<body>
-    <div class="ctg" >Категорії товарів</div>
-   
-    <div class='menu'>
-        <div class='img_container'>
-            <img src ="/media/nag.png" class='img_menu' alt=""/>
+
+<body> 
+    <div class = "header"> </div>
+
+    <div id="page" class="page">
+       
+        <div class="grid" >
+            <div class="ctg">Категорії товарів</div>
+
+            <div class='menu' onclick="to_catalog({{heaters}})">
+                <div class='img_container'>
+                    <img src="{% static 'images/nag.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Нагрівачі табаку</div>
+            </div>
+
+            <div class='menu' onclick="to_catalog({{iqos}})">
+                <div class='img_container'>
+                    <img src="{% static 'images/iqos.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>IQOS</div>
+            </div>
+
+
+            <div class='menu'>
+                <div class='img_container'>
+                    <img src="{% static 'images/vape.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>JOUZ</div>
+            </div>
+
+
+            <div class='menu'>
+                <div class='img_container'>
+                    <img src="{% static 'images/glo.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>GLO</div>
+            </div>
+
+
+
+            <div class='menu' style="grid-column: span 2;margin: auto;">
+                <div class='img_container'>
+                    <img src="{% static 'images/pw.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Павербанки та зар. станції</div>
+            </div>
+
+
+            <div class="tovar_button"> Підібрати товар</div>
         </div>
-      
-        <div class='menutext'><a href="{%url 'heater'%}">хейтерс</a></div>
     </div>
-    <div class='menu'>
-        <div class='img_container'>
-            <img src ="/media/iqos.png" class='img_menu' alt=""/>
-        </div>
-      
-        <div class='menutext'><a href="{%url 'iqos'%}">айкосик</a></div>
-    </div>
-    <!-- <MainMenuCard img ={iqos} title="Iqos"/>
-    <MainMenuCard img ={glo} title="GLO"/>
-    <MainMenuCard img ={vape} title="JOUZ"/>
-    <MainMenuCard img ={powerbank}  title="Павербанки та зар. станції"/> -->
 </body>
+<script>
+    
+    function to_catalog(data) {
+        const content = document.querySelector('.grid') 
+        const header = document.querySelector('.header') 
+        header.innerHTML = '<div class="back_to_menu" onclick = "to_menu()" > <img src="{% static "images/arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>';
+        content.innerHTML = '';
+        for(let i = 0; i < data.length; i++ ){
+            let fields = data[i]['fields']
+            content.innerHTML+=`
+            <div class='menu'>
+                <div class='img_container'>
+                    <img src = ${fields['picture']} class='img_menu' alt=""/>
+                </div>
+              
+                <div class='menutext'>${fields['name']}</div>
+                <div class="div_btn">
+                    <button class ="button_card">${fields['price']} ${fields['currencyId']}</button>
+                </div>
+            </div>`
+        }
+        
+       
+
+    }
+
+
+    function to_menu(){
+    
+        const content = document.querySelector('.grid')
+        const header = document.querySelector('.header') 
+        header.innerHTML = '';
+        content.innerHTML=`
+        <div class="ctg">Категорії товарів</div>
+        <div class="grid" >
+            <div class="menu" onclick="to_catalog({{heaters}})">
+                <div class="img_container">
+                    <img src="{% static 'images/nag.png' %}" class="img_menu" alt="" />
+                </div>
+                <div class="menutext">Нагрівачі табаку</div>
+            </div>
+        </div>
+        <div class='menu' onclick = "to_catalog({{iqos}})">
+            <div class='img_container'>
+                <img src="{% static 'images/iqos.png' %}" class='img_menu' alt="" />
+            </div>
+            <div class='menutext'>IQOS</div>
+        </div>
+
+
+        <div class='menu'>
+            <div class='img_container'>
+                <img src="{% static 'images/vape.png' %}" class='img_menu' alt="" />
+            </div>
+            <div class='menutext'>JOUZ</div>
+        </div>
+
+
+        <div class='menu'>
+            <div class='img_container'>
+                <img src="{% static 'images/glo.png' %}" class='img_menu' alt="" />
+            </div>
+            <div class='menutext'>GLO</div>
+        </div>
+
+
+
+        <div class='menu' style="grid-column: span 2;margin: auto;">
+            <div class='img_container'>
+                <img src="{% static 'images/pw.png' %}" class='img_menu' alt="" />
+            </div>
+            <div class='menutext'>Павербанки та зар. станції</div>
+        </div>
+
+
+        <div class="tovar_button"> Підібрати товар</div>`
+    }
+</script>
+
 </html>
