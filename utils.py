@@ -14,12 +14,18 @@ class DBManager:
     def __str_to_bool(self,s):
         return s.lower() in ['true', '1', 't', 'y', 'yes']
     def addToDB(self):
-        data = json.load(open("podiki.json", "r", encoding="UTF-8"))
-
+        data = json.load(open("alldata.json", "r", encoding="UTF-8"))
+        Podik.objects.all().delete()
         pods = data["yml_catalog"]["shop"][0]["offers"][0]["offer"]
-        print(pods[0]["$"])
-        print(self.__str_to_bool("false"))
+        # print(pods[0]["$"])
+        # print(self.__str_to_bool("false"))
         for pod in pods:
+            picture = '-'
+            try:
+                picture=pod["picture"][0]
+            except:
+                picture="-"
+
             podik = Podik(
                 id = pod["$"]["id"],
                 available = self.__str_to_bool(pod["$"]["available"]),
@@ -31,7 +37,7 @@ class DBManager:
                 # description=pod["description"][0],
                 quantity_in_stock=int(pod["quantity_in_stock"][0]),
                 url=pod["url"][0],
-                picture=pod["picture"][0],
+                picture=picture,
                 # param=pod["param"][0]["_"],
             )
             podik.save()
@@ -58,5 +64,5 @@ class DBManager:
             podik.save()
         
 dbm = DBManager()
-dbm.addToDB()
+# dbm.addToDB()
 # dbm.addXmlToDB()

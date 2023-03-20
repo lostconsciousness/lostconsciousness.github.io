@@ -1,4 +1,5 @@
 from aiogram import executor, Bot, Dispatcher, types
+from newpost import areas_centers_names, find_warehouse
 
 token = "6075679825:AAGrgD6b9hybk9EoNue44k1ZPW8paFJCs5M"
 
@@ -55,10 +56,30 @@ async def qq(message:types.Message):
         reply_markup=reply_markup,
     )
 
+@dp.message_handler(commands=['cities'])
+async def spec(message:types.Message):
+    print(message.from_user.username+": "+ message.text)
+    s = "Усі обласні центри України:"
+    for city in areas_centers_names:
+        s = s+f"\n{city}"
+    await message.answer(text=s)
+
+@dp.message_handler(lambda message: message.text in areas_centers_names)
+async def newpost(message:types.Message):
+    s = "Усі відділення у місті "+message.text
+    j = 0
+    for i in find_warehouse(message.text):
+        if j == 10:
+            break
+        j=j+1
+        s = s + "\n"+i
+    await message.answer(text=s)
 
 @dp.message_handler(content_types=types.ContentType.ANY)
 async def spec(message:types.Message):
     print(message.from_user.username+": "+ message.text)
+
+
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)

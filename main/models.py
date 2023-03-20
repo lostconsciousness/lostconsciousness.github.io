@@ -19,8 +19,8 @@ class Podik(models.Model):
     def __str__(self):
         return self.name
     class Meta:
-        verbose_name = "Солоденький пісюнчик"
-        verbose_name_plural = "Солоденькі пісюнчики"
+        verbose_name = "Електронна цигарка"
+        verbose_name_plural = "Електронні цигарки"
         ordering = ['categoryId', 'name']
     # def get_absolute_url(self):
     #     return reverse('post', kwargs={'post_id': self.pk})

@@ -15,7 +15,7 @@ class PodikAdmin(admin.ModelAdmin):
     list_display_links = ('id','name','price', 'available', 'currencyId')
     search_fields = ('id','name', 'price')
     list_filter = ('available',)
-    fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'description', 'url', 'picture', 'get_html_photo')
+    fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'url', 'picture', 'get_html_photo')
     readonly_fields = ('get_html_photo', )
 
     def get_html_photo(self, object):
