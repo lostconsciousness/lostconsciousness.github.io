@@ -100,13 +100,21 @@ def find_warehouse(city_name):
     result2 = response2.json()
     types = result2['data']
     a = []
+    iter = 0
     for i in types:
+        #  if iter == 10:
+        #         break
+        #  iter= iter+1
          if i['Description'] == "Поштове відділення":
             a.append(i['Ref'])
             print( i['Ref'])
     if 'data' in result:
+        iter = 0
         areas = result['data']
         for area in areas:
+            # if iter == 10:
+            #     break
+            # iter= iter+1
             if area['TypeOfWarehouse'] in a: 
                 ans.append(area['Description'])
                 print(area['Description'])

@@ -8,15 +8,18 @@ django.setup()
 from main.models import Podik
 import json
 from bs4 import BeautifulSoup
+from django.db import transaction
 
 
 class DBManager:
     def __str_to_bool(self,s):
         return s.lower() in ['true', '1', 't', 'y', 'yes']
+    @transaction.atomic
     def addToDB(self):
         data = json.load(open("alldata.json", "r", encoding="UTF-8"))
         Podik.objects.all().delete()
         pods = data["yml_catalog"]["shop"][0]["offers"][0]["offer"]
+        
         # print(pods[0]["$"])
         # print(self.__str_to_bool("false"))
         for pod in pods:
@@ -25,7 +28,12 @@ class DBManager:
                 picture=pod["picture"][0]
             except:
                 picture="-"
-
+            par = ""
+            try:
+                for parametr in pod['param']:
+                    par =par + parametr["$"]["name"] + " = " + parametr["_"]+", "
+            except:
+                par = "-"
             podik = Podik(
                 id = pod["$"]["id"],
                 available = self.__str_to_bool(pod["$"]["available"]),
@@ -38,9 +46,28 @@ class DBManager:
                 quantity_in_stock=int(pod["quantity_in_stock"][0]),
                 url=pod["url"][0],
                 picture=picture,
-                # param=pod["param"][0]["_"],
+                param=par,
             )
             podik.save()
+    def check(self):
+        data = json.load(open("alldata.json", "r", encoding="UTF-8"))
+        pods = data["yml_catalog"]["shop"][0]["offers"][0]["offer"]
+        povtorenie = []
+        id_povtorenia = []
+        params = []
+        # print(pods[0]["$"])
+        for pod in pods:
+            try:
+                params = pod["param"]
+                for param in params:
+                    if povtorenie == None or param["$"]['name'] not in povtorenie:
+                        povtorenie.append(param["$"]['name'])
+                        id_povtorenia.append(pod["categoryId"][0]+": "+ param["$"]['name'])
+            except:
+                pass
+                
+        #print(povtorenie)
+        print(id_povtorenia)
     def addXmlToDB(self):
         with open('offer.xml', 'r',encoding='utf-8') as f:
             data = f.read()
@@ -59,10 +86,11 @@ class DBManager:
                 quantity_in_stock=int(pod.find('quantity_in_stock').text),
                 url=pod.find('url').text,
                 picture=pod.find('picture').text,
-                # param=pod["param"][0]["_"],
+                #params=pod["param"][0]["_"],
             )
             podik.save()
         
 dbm = DBManager()
-# dbm.addToDB()
+dbm.check()
+#dbm.addToDB()
 # dbm.addXmlToDB()

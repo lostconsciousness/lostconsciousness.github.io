@@ -15,16 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import heater, homepage, iqos, load_more
+from main.views import heater, homepage, iqos, load_more, filter_data
 from . import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('', homepage, name="homepage"),
     path('heater/', heater, name="heater"),
     path('iqos/', iqos, name = "iqos"),
     path('admin/', admin.site.urls),
-    path('load_more/', load_more, name = "load_more")
+    path('load_more/', load_more, name = "load_more"),
+    path('filter_data/', filter_data, name = "filter_data"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

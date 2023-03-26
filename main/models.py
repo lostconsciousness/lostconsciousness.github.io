@@ -14,7 +14,12 @@ class Podik(models.Model):
     #description = models.TextField(verbose_name="Опис")
     url = models.CharField(max_length=255)
     picture = models.CharField(max_length=255, verbose_name="URL картинки")
-    # param = models.CharField(max_length=255)
+    param = models.TextField(null=True)
+    # flavour = models.CharField(max_length=255)
+    # nicotine_strength = models.CharField(max_length=255)
+    # fluid_volume = models.CharField(max_length=255)
+    # ratio  = models.CharField(max_length=255)
+    # country = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name

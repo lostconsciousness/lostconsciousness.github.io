@@ -9,7 +9,7 @@
     <title>Document</title>
 
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/main.css' %}"> {% endcomment %}
     <style>
         body {
             margin: 0;
@@ -42,7 +42,7 @@
             justify-content: center;
             align-items: center;
             border: 3px solid rgb(255 255 255 / 60%);
-            border-radius: 14%;
+            border-radius: 15px;
             cursor: pointer; 
         }
         
@@ -100,8 +100,8 @@
         
         .img_menu {
             margin-top: 0vh;
-            width: 13vh;
-            height: 13vh;
+            width: 11vh;
+            height: 11vh;
             margin-bottom: 1vh;
         
         }
@@ -109,12 +109,12 @@
         .tovar_button {
             display: inline-grid;
             background-color: #e1d7d2;
-            width: 100%;
+            width: 83vw;
             height: 100%;
             justify-content: center;
             align-items: center;
             border: 3px solid rgb(255 255 255 / 60%);
-            border-radius: 5%;
+            border-radius: 15px;
             grid-column: span 2;
             margin: auto;
             font-weight: bold;
@@ -244,7 +244,33 @@
             margin-left: 85%;
             
         }
+        .btn_loadmore{
+            margin: auto;
+            left: 7%;
+            position: relative;
+            top: 1vh;
+            bottom: 2vh;
+            width: 85%;
+            border: 0px solid #edbe4e;
+            color: black;
+            background: #ef9c1e94;
+            height: 4vh;
+            border-radius: 10px;
+            font-size: 100%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
     </style>
+    <script>
+        {% comment %} const clearBtn = document.getElementById('clear-btn');
+        const myForm = document.getElementById('my-form');
+        clearBtn.addEventListener('click', () => {
+          myForm.reset();
+          console.log("sosi");
+        });
+         {% endcomment %}
+      </script>
 </head>
 
 <body> 
@@ -255,57 +281,72 @@
         <div class="grid" >
             <div class="ctg">Категорії товарів</div>
 
-            <div class='menu' onclick="to_catalog({{heaters}})">
+            
+            <div class='menu' style="grid-column: span 2;margin: auto; width: 83vw" onclick="to_catalog({{pod_system}}, 'pods')">
                 <div class='img_container'>
-                    <img src="{%static 'images/nag.png'%}" class='img_menu' alt="" />
+                    <img src="{% static 'images/pod.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class='menutext'>Нагрівачі табаку</div>
+                <div class='menutext'>POD системи</div>
             </div>
 
-            <div class='menu' onclick="to_catalog({{iqos}})">
+            
+            <div class='menu' onclick="to_catalog({{devices}}, 'devices')">
                 <div class='img_container'>
-                    <img src="{% static 'images/iqos.png' %}" class='img_menu' alt="" />
+                    <img src="{% static 'images/vaping.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class='menutext'>IQOS</div>
+                <div class='menutext'>Пристрої</div>
             </div>
 
-
-            <div class='menu'>
+            
+            <div class='menu' onclick = "to_disposable()">
                 <div class='img_container'>
-                    <img src="{% static 'images/vape.png' %}" class='img_menu' alt="" />
+                    <img src="{% static 'images/podik.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class='menutext'>JOUZ</div>
+                <div class='menutext'>Одноразові</div>
             </div>
 
-
-            <div class='menu'>
+            <div class='menu' onclick="to_catalog({{cartridges}}, 'cartridges')">
                 <div class='img_container'>
-                    <img src="{% static 'images/glo.png' %}" class='img_menu' alt="" />
+                    <img src="{% static 'images/cartrid.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class='menutext'>GLO</div>
+                <div class='menutext'>Картриджи</div>
             </div>
 
-
-
-            <div class='menu' style="grid-column: span 2;margin: auto;">
+            <div class='menu' onclick="to_liquds()"> 
                 <div class='img_container'>
-                    <img src="{% static 'images/pw.png' %}" class='img_menu' alt="" />
+                    <img src="{% static 'images/liquid.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class='menutext'>Павербанки та зар. станції</div>
+                <div class='menutext'>Рідини для POD систем</div>
             </div>
+            <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod')"> Підібрати товар</div>
+        </div>
+        <div id="btn_container">
 
-
-            <div class="tovar_button"> Підібрати товар</div>
         </div>
     </div>
 </body>
 <script>
     
-    function to_catalog(data) {
+    {% comment %} function clearForm(){
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/clear-filters/', true);
+        xhr.onload = () => {
+            const data = JSON.parse(xhr.responseText);
+            // Обновляем часть страницы с фильтрами
+            document.querySelector('#filters-container').innerHTML = data.filters_html;
+        };
+        xhr.send();
+    } {% endcomment %}
+    function to_catalog(data, name, subdirectory=null) {
+        console.log(name)
+        menus = {'disposable':'to_disposable()', 'liquids':'to_liquds()', null:'to_menu()'}
         const content = document.querySelector('.grid') 
+        const btn_container = document.querySelector('#btn_container') 
         const header = document.querySelector('.header') 
+
+        btn_container.innerHTML = '';
         header.innerHTML = `
-        <div class="back_to_menu" onclick = "to_menu()" > 
+        <div class="back_to_menu" onclick = "${menus[subdirectory]}" > 
             <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
          <div>
             <img src="{% static "images/cart.png" %}" class ="cart"; >
@@ -332,14 +373,13 @@
             </div>`
         }
         
-        content.innerHTML += `
-       <button onclick = "load_more()">load more</button>
-       ` 
+        btn_container.innerHTML += `
+            <button class ="btn_loadmore" onclick = "load_more('${name}')">load more</button>` 
+
 
     }
 
-    function AddToCard(id,i)
-    {
+    function AddToCard(id,i){
         const mainbtn = document.getElementById(id);
         const inCart = document.getElementById("in_cart_"+i);
         const plus = document.getElementById("btn_plus_"+i);
@@ -405,70 +445,207 @@
 
     }
     
-
-
-
     function to_menu(){
     
         const content = document.querySelector('.grid')
         const header = document.querySelector('.header') 
+        const btn_container = document.querySelector('#btn_container')
+
+        btn_container.innerHTML = '';
         header.innerHTML = '';
         content.innerHTML=`
-        <div class="ctg">Категорії товарів</div>
         <div class="grid" >
-            <div class="menu" onclick="to_catalog({{heaters}})">
-                <div class="img_container">
-                    <img src="{% static 'images/nag.png' %}" class="img_menu" alt="" />
+            <div class="ctg">Категорії товарів</div>
+
+            
+            <div class='menu' style="grid-column: span 2;margin: auto; width: 83vw" onclick="to_catalog({{pod_system}}, 'pods')">
+                <div class='img_container'>
+                    <img src="{% static 'images/pod.png' %}" class='img_menu' alt="" />
                 </div>
-                <div class="menutext">Нагрівачі табаку</div>
+                <div class='menutext'>POD системи</div>
             </div>
-        </div>
-        <div class='menu' onclick = "to_catalog({{iqos}})">
-            <div class='img_container'>
-                <img src="{% static 'images/iqos.png' %}" class='img_menu' alt="" />
+
+            
+            <div class='menu' onclick="to_catalog({{devices}}, 'devices')">
+                <div class='img_container'>
+                    <img src="{% static 'images/vaping.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Пристрої</div>
             </div>
-            <div class='menutext'>IQOS</div>
-        </div>
 
-
-        <div class='menu'>
-            <div class='img_container'>
-                <img src="{% static 'images/vape.png' %}" class='img_menu' alt="" />
+            
+            <div class='menu' onclick = "to_disposable()">
+                <div class='img_container'>
+                    <img src="{% static 'images/podik.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Одноразові</div>
             </div>
-            <div class='menutext'>JOUZ</div>
-        </div>
 
-
-        <div class='menu'>
-            <div class='img_container'>
-                <img src="{% static 'images/glo.png' %}" class='img_menu' alt="" />
+            <div class='menu' onclick="to_catalog({{cartridges}}, 'cartridges')">
+                <div class='img_container'>
+                    <img src="{% static 'images/cartrid.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Картриджи</div>
             </div>
-            <div class='menutext'>GLO</div>
-        </div>
 
-
-
-        <div class='menu' style="grid-column: span 2;margin: auto;">
-            <div class='img_container'>
-                <img src="{% static 'images/pw.png' %}" class='img_menu' alt="" />
+            <div class='menu' onclick="to_liquds()"> 
+                <div class='img_container'>
+                    <img src="{% static 'images/liquid.png' %}" class='img_menu' alt="" />
+                </div>
+                <div class='menutext'>Рідини для POD систем</div>
             </div>
-            <div class='menutext'>Павербанки та зар. станції</div>
+            
+            
+
+
+            <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod')"> Підібрати товар</div>
+
+
         </div>
-
-
-        <div class="tovar_button"> Підібрати товар</div>`
+    </div>`
     }
-    function load_more(){
+
+    function to_filters(data,name){
+        console.log("data" +data)
+        console.log("name" +name)
+        const content = document.querySelector('.grid') 
+        const btn_container = document.querySelector('#btn_container') 
+        const header = document.querySelector('.header') 
+        btn_container.innerHTML = '';
+        header.innerHTML = `
+        <div class="back_to_menu" onclick = "to_menu()" style = "border: solid 1px black; height: 50%;"> 
+            <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
+            <div>
+                <img src="{% static "images/cart.png" %}" class ="cart"; >
+                <div class ="count_cart invisible" id="in_cart">${0}</div>
+            </div>
+            <div onclick = "to_filters({{pod}}, 'pod')" style = "border: solid 1px black; height: 5%; width: 3%; float:right; margin-right: 35px; padding-right: 30px; padding-bottom: 40px">
+                <img src="{% static "images/filters.png" %}" class ="cart"; >
+            </div>
+          `;
+          content.innerHTML = `
+            <form id="filter-form">
+                {{ filter.form.as_p }}
+                {{filter.categoryId}}
+                {{filter.price}}
+                {{filter.param}}
+                <button type = "submit")">Применить фильтр</button>
+            </form>
+        <div id = "my-div"></div>`
+        //menus = {'disposable':'to_disposable()', 'liquids':'to_liquds()', null:'to_menu()'}
+        let data_filter = "-----------"
+        $('#filter-form').submit(function() {
+            data_filter = $('#filter-form').serialize()
+             this.style.display = 'none';
+            // остальной код обработки формы
+          });
+        $(document).ready(function() {
+                var categoryId_input = $('.catId_input');
+
+                // Listen for changes to the value of filter2
+                categoryId_input.change(function() {
+                  // Get the current value of filter2
+                  var categoryId_value = categoryId_input.val();
+              
+                  // Get a reference to the filter1 input element
+                  var param_input = $('.param_input');
+                  console.log("sosi")
+                  // If filter2Value is 'some_value', update the attributes of filter1
+                  if (categoryId_value == '220') {
+                    console.log("sosi")
+                    param_input.attr('class', 'param_input visible');
+                  }
+                });
+            $('#filter-form').submit(function(event) {
+              event.preventDefault();
+              $.ajax({
+                url: '{% url "filter_data" %}',
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(data) {
+                  // обновление таблицы с результатами
+                    var my_div = $('#my-div');
+                    my_div.empty();
+                    var html = '';
+                    for (var i = 0; i < 50; i++) {
+                        content.innerHTML += `<div class='catalog'>
+                        <div class ="count invisible" id="in_cart_${i}">${0}</div>
+                        <div class='img_container'>
+                            <img src = ${data.data[i].picture} class='img_menu' alt=""/>
+                        </div>
+                      
+                        <div class='menutext'>${data.data[i].name}</div>
+                        <div class="div_btn" >
+                            <button class ="button_card visible" onclick ="AddToCard(this.id,${i})" id="button_card_${i}">${data.data[i].price} ${data.data[i].currencyId}</button> 
+                            <button class="btn_minus invisible" id="btn_minus_${i}" onclick ="DeleteOne(${i})">-</button>
+                            <button class="btn_plus invisible" id="btn_plus_${i}" onclick ="AddOne(${i})">+</button>
+                        </div>
+                    </div>`
+                    }
+                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>` 
+                    my_div.html(html);
+                }
+              });
+            });
+          });
+    }
+    function load_more_filtered(name, data_filter){
         let _current_item = $('.catalog').length;
         console.log(_current_item);
         const container = document.querySelector('.grid');
+        var btn = document.querySelector('.btn_loadmore');
+        btn.style.display = 'none';
+        let data = data_filter + "&total_item=" + _current_item + "&name=" + name;
+        console.log(data_filter)
         $.ajax({
             url: '{%url "load_more"%}',
             type: 'GET',
-            data: "total_item=" + _current_item,
+            data: data,
+            beforeSend: function(){},
+            success: function (data){
+                var my_div = $('#my-div');
+                    //my_div.empty();
+                    for (var j = 0; j < 50; j++) {
+                        let i = j+_current_item
+                        container.innerHTML += `<div class='catalog'>
+                        <div class ="count invisible" id="in_cart_${i}">${0}</div>
+                        <div class='img_container'> 
+                            <img src = ${data.offer[j].picture} class='img_menu' alt=""/>
+                        </div>
+                      
+                        <div class='menutext'>${data.offer[j].name}</div>
+                        <div class="div_btn" >
+                            <button class ="button_card visible" onclick ="AddToCard(this.id,${i})" id="button_card_${i}">${data.offer[j].price} ${data.offer[j].currencyId}</button> 
+                            <button class="btn_minus invisible" id="btn_minus_${i}" onclick ="DeleteOne(${i})">-</button>
+                            <button class="btn_plus invisible" id="btn_plus_${i}" onclick ="AddOne(${i})">+</button>
+                        </div>
+                    </div>`
+                    }
+                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>` 
+            },
+            error: function(err){
+                console.log(err);
+            }
+        })
+    }
+
+    function load_more(name){
+        let _current_item = $('.catalog').length;
+        console.log(_current_item);
+        const container = document.querySelector('.grid');
+        const btn = document.querySelector('.btn_loadmore');
+        var currentUrl = window.location.href;
+        var newUrl = currentUrl.split('?')[0];
+        console.log(currentUrl.split('?')[1]);
+        let data = "total_item=" + _current_item + "&name=" + name;
+       
+        $.ajax({
+            url: '{%url "load_more"%}',
+            type: 'GET',
+            data: data,
             beforeSend: function(){},
             success: function (response){
-                const data = response.podiks;
+                const data = response.offer;
                 console.log(data)
                 for(let j = 0; j < data.length; j++ ){
                     let i = j+_current_item
@@ -492,6 +669,99 @@
                 console.log(err);
             }
         })
+        
+    }
+
+    function to_disposable(){
+        const content = document.querySelector('.grid') 
+        const header = document.querySelector('.header') 
+        const btn_container = document.querySelector('#btn_container') 
+
+        btn_container.innerHTML = '';
+        header.innerHTML = `
+        <div class="back_to_menu" onclick = "to_menu()" > 
+            <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
+          `;
+        content.innerHTML=`
+        <div id="page" class="page">
+       
+            <div class="grid" >
+                <div class="ctg">Категорії товарів</div>
+    
+                
+                <div class='menu' style="grid-column: span 2;margin: auto; width: 83vw" onclick="to_catalog({{disposable}}, 'disposable', 'disposable')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/pod.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>POD системи</div>
+                </div>
+    
+                
+                <div class='menu' onclick="to_catalog({{elf_bar}}, 'elf_bar', 'disposable')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/elfbar_logo.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>ELF BAR</div>
+                </div>
+    
+                
+                <div class='menu' onclick = "to_catalog({{hqd}}, 'hqd', 'disposable')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/hqd-logo.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>HQD</div>
+                </div>
+
+                <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod')"> Підібрати товар</div>
+            </div>
+        </div>`
+    
+    }
+
+    function to_liquds(){
+        const content = document.querySelector('.grid') 
+        const header = document.querySelector('.header') 
+        const btn_container = document.querySelector('#btn_container') 
+
+        btn_container.innerHTML = '';
+        header.innerHTML = `
+        <div class="back_to_menu" onclick = "to_menu()" > 
+            <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
+          `;
+        content.innerHTML=`
+        <div id="page" class="page">
+       
+            <div class="grid" >
+                <div class="ctg">Категорії товарів</div>
+    
+                
+                <div class='menu' style="grid-column: span 2;margin: auto; width: 83vw" onclick="to_catalog({{liquids}}, 'liquids', 'liquids')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/liquid.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>Усі рідини</div>
+                </div>
+    
+                
+                <div class='menu' onclick="to_catalog({{ukrainian_salt}}, 'ukrainian_salt', 'liquids')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/ukraine.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>Українські сольові</div>
+                </div>
+    
+                
+                <div class='menu' onclick = "to_catalog({{premium_salt}}, 'premium_salt', 'liquids')">
+                    <div class='img_container'>
+                        <img src="{% static 'images/premium.png' %}" class='img_menu' alt="" />
+                    </div>
+                    <div class='menutext'>Сольові преміум</div>
+                </div>
+
+                <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod')"> Підібрати товар</div>
+            </div>
+        </div>`
+    
     }
 </script>
 
