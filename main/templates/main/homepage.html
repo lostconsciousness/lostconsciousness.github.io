@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
     {% load static %}
     {% comment %} <link rel="stylesheet" href="{% static 'css/main.css' %}"> {% endcomment %}
     <style>
@@ -325,6 +326,7 @@
         </div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     
     {% comment %} function clearForm(){
@@ -526,9 +528,52 @@
           content.innerHTML = `
             <form id="filter-form">
                 {{ filter.form.as_p }}
-                {{filter.categoryId}}
-                {{filter.price}}
-                {{filter.param}}
+                    <p>Оберіть категорію</p>
+                    {{filter.categoryId}}
+                <div class = "price_input invisible">
+                    <p>Оберіть діапазон ціни</p>
+                    {{filter.price}}
+                </div>
+                <div id = "select_container" class = "invisible">
+                    <p>Оберіть смак</p>
+                    {{filter.param}}
+                </div>
+                <div class = "nicotine_strength invisible">
+                    <p>Оберіть міцність нікотину</p>
+                    {{filter.nicotine_strength}}
+                </div>
+                <div class = "fluid_volume invisible">
+                    <p>Оберіть об'єм рідини</p>
+                    {{filter.fluid_volume}}
+                </div>
+                <div class = "battery_capacity invisible">
+                    <p>Оберіть ємність аккумулятору</p>
+                    {{filter.battery_capacity}}
+                </div>
+                <div class = "resistance invisible">
+                    <p>Оберіть опір</p>
+                    {{filter.resistance}}
+                </div>
+                <div class = "power invisible">
+                    <p>Оберіть потужність</p>
+                    {{filter.power}}
+                </div>
+                <div class = "atomizer_volume invisible">
+                    <p>Оберіть ємність атомайзеру</p>
+                    {{filter.atomizer_volume}}
+                </div>
+                <div class = "max_power invisible">
+                    <p>Оберіть максимальну потужність</p>
+                    {{filter.max_power}}
+                </div>
+                <div class = "puffs_number invisible">
+                    <p>Оберіть кількість затяжок</p>
+                    {{filter.puffs_number}}
+                </div>
+                <div class = "rechargeable invisible">
+                    <p>Перезаряджаються</p>
+                    {{filter.rechargeable}}
+                </div>
                 <button type = "submit")">Применить фильтр</button>
             </form>
         <div id = "my-div"></div>`
@@ -540,20 +585,127 @@
             // остальной код обработки формы
           });
         $(document).ready(function() {
+                
                 var categoryId_input = $('.catId_input');
 
                 // Listen for changes to the value of filter2
                 categoryId_input.change(function() {
                   // Get the current value of filter2
                   var categoryId_value = categoryId_input.val();
-              
+                  let fluid_volume = $('.fluid_volume')
                   // Get a reference to the filter1 input element
-                  var param_input = $('.param_input');
-                  console.log("sosi")
+                  var param_input = $('#select_container');
+                  let price_input = $('.price_input');
+                  let nicotine_strength_input = $('.nicotine_strength')
+                  let battery_capacity = $('.battery_capacity')
+                  let resistance = $('.resistance')
+                  let power = $('.power')
+                  let atomizer_volume = $('.atomizer_volume')
+                  let max_power = $('.max_power')
+                  let puffs_number = $('.puffs_number')
+                  let rechargeable = $('.rechargeable')
+                  $('.param_input').select2();
                   // If filter2Value is 'some_value', update the attributes of filter1
                   if (categoryId_value == '220') {
-                    console.log("sosi")
-                    param_input.attr('class', 'param_input visible');
+                    param_input.attr('class', 'invisible')
+                    price_input.attr('class', 'price_input visible');
+                    nicotine_strength_input.attr('class', 'nicotine_strength invisible')
+                    fluid_volume.attr('class', 'fluid_volume visible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power visible')
+                    atomizer_volume.attr('class', 'atomizer_volume visible')
+                    max_power.attr('class', 'max_power visible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '208'){
+                    param_input.attr('class', 'visible')
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    fluid_volume.attr('class', 'fluid_volume visible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume invisible')
+                    max_power.attr('class', 'max_power invisible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '222'){
+                    param_input.attr('class', 'invisible')
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    fluid_volume.attr('class', 'fluid_volume visible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance visible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume visible')
+                    max_power.attr('class', 'max_power visible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '239'){
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    param_input.attr('class', 'visible')
+                    fluid_volume.attr('class', 'fluid_volume visible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume invisible')
+                    max_power.attr('class', 'max_power visible')
+                    puffs_number.attr('class', 'puffs_number visible')
+                    rechargeable.attr('class', 'rechargeable visible')
+                  }
+                  else if(categoryId_value == '236'){
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    param_input.attr('class', 'visible')
+                    fluid_volume.attr('class', 'fluid_volume visible')
+                    battery_capacity.attr('class', 'battery_capacity invisible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume invisible')
+                    max_power.attr('class', 'max_power invisible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '288'){
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    param_input.attr('class', 'visible')
+                    fluid_volume.attr('class', 'fluid_volume invisible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume invisible')
+                    max_power.attr('class', 'max_power visible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '287'){
+                    nicotine_strength_input.attr('class', 'nicotine_strength visible')
+                    param_input.attr('class', 'visible')
+                    fluid_volume.attr('class', 'fluid_volume invisible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume invisible')
+                    max_power.attr('class', 'max_power invisible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else if(categoryId_value == '221'){
+                    nicotine_strength_input.attr('class', 'nicotine_strength invisible')
+                    param_input.attr('class', 'invisible')
+                    fluid_volume.attr('class', 'fluid_volume invisible')
+                    battery_capacity.attr('class', 'battery_capacity visible')
+                    resistance.attr('class', 'resistance invisible')
+                    power.attr('class', 'power invisible')
+                    atomizer_volume.attr('class', 'atomizer_volume visible')
+                    max_power.attr('class', 'max_power invisible')
+                    puffs_number.attr('class', 'puffs_number invisible')
+                    rechargeable.attr('class', 'rechargeable invisible')
+                  }
+                  else{
+                    nicotine_strength_input.attr('class', 'nicotine_strength invisible')
+                    param_input.attr('class', 'invisible');
                   }
                 });
             $('#filter-form').submit(function(event) {

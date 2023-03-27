@@ -15,11 +15,19 @@ class Podik(models.Model):
     url = models.CharField(max_length=255)
     picture = models.CharField(max_length=255, verbose_name="URL картинки")
     param = models.TextField(null=True)
-    # flavour = models.CharField(max_length=255)
-    # nicotine_strength = models.CharField(max_length=255)
-    # fluid_volume = models.CharField(max_length=255)
-    # ratio  = models.CharField(max_length=255)
-    # country = models.CharField(max_length=255)
+    flavour = models.CharField(null = True,max_length=255, verbose_name="Выбор вкуса")
+    nicotine_strength = models.CharField(null = True,max_length=255, verbose_name="Крепость никотина")
+    fluid_volume = models.CharField(null = True,max_length=255, verbose_name="Объем жидкости")
+    battery_capacity = models.CharField(null = True,max_length=255, verbose_name="Ёмкость аккумулятора")
+    cartridge_capacity = models.CharField(null = True,max_length=255, verbose_name="Объём картриджа")
+    resistance = models.CharField(null = True,max_length=255, verbose_name="Выбор сопротивления")
+    power = models.CharField(null = True,max_length = 255, verbose_name="Мощность")
+    atomizer_volume = models.CharField(null = True,max_length=255, verbose_name="Объем атомайзера")
+    max_power = models.CharField(null = True,max_length=255, verbose_name="Максимальная мощность")
+    puffs_number = models.CharField(null = True,max_length=255, verbose_name="Количество затяжек")
+    rechargeable = models.BooleanField(null = True, verbose_name="Перезаряжаемые'")
+    compatibility_selection = models.CharField(null = True,max_length=255, verbose_name="Выбор совместимости")
+
 
     def __str__(self):
         return self.name
@@ -29,5 +37,12 @@ class Podik(models.Model):
         ordering = ['categoryId', 'name']
     # def get_absolute_url(self):
     #     return reverse('post', kwargs={'post_id': self.pk})
+
+
+# class Parameters(models.Model):
+#     id = models.ForeignKey(Podik, on_delete = models.CASCADE, primary_key=True)
+    
+
+
 
 # Create your models here.

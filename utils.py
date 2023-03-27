@@ -34,6 +34,116 @@ class DBManager:
                     par =par + parametr["$"]["name"] + " = " + parametr["_"]+", "
             except:
                 par = "-"
+            flavour = '-'
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Выбор вкуса":
+                        flavour=parametr["_"]
+            except:
+                flavour="-"
+            nicotine_strength = '-'
+            try:
+                nicotine_strength = ''
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Крепость никотина" or parametr["$"]["name"] == "Выбор крепости":
+                        for i in parametr["_"]:
+                            if i.isdigit():
+                                nicotine_strength = nicotine_strength+i
+            except:
+                nicotine_strength="-"
+            nicotine_type = '-'
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Вид никотина":
+                        nicotine_type = parametr["_"]
+            except:
+                nicotine_type="-"
+            fluid_volume = '-'
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Объем жидкости":
+                        fluid_volume = parametr["_"]
+            except:
+                fluid_volume="-"
+            battery_capacity = '-'
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Ёмкость аккумулятора":
+                        for i in parametr["_"].split(" "):
+                            if i.isdigit():
+                                battery_capacity = str(i) + " mAh"
+            except:
+                battery_capacity="-"
+            cartridge_capacity = "-"
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Объём картриджа":
+                        cartridge_capacity = parametr["_"]
+            except:
+                cartridge_capacity="-"
+
+            resistance = '-'
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Выбор сопротивления":
+                        resistance = parametr["_"]
+            except:
+                resistance="-"
+
+            power = ""
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Мощность":
+                        power = parametr["_"]
+            except:
+                power="-"
+            atomizer_volume = "-"
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Объем атомайзера":
+                        if parametr["_"][-1] != ".":
+                            atomizer_volume = parametr["_"] + "."
+                        else:
+                            atomizer_volume = parametr["_"]
+            except:
+                atomizer_volume="-"
+
+            max_power = "-"
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Максимальная мощность":
+                        for i in parametr["_"].split(" "):
+                            if i.isdigit():
+                                max_power = str(i) + " Вт"
+            except:
+                max_power="-"
+
+            puffs_number = "-"
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Количество затяжек" or parametr["$"]["name"] == "Выбор количества затяжек":
+                        puffs_number = parametr["_"]
+            except:
+                puffs_number="-"
+
+            rechargeable = None
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Перезаряжаемые":
+                        if parametr["_"] == "Так":
+                            rechargeable = True
+                        else:
+                            rechargeable = False
+            except:
+                rechargeable=None
+
+            compatibility_selection = "-"
+            try:
+                for parametr in pod['param']:
+                    if parametr["$"]["name"] == "Выбор совместимости":
+                        compatibility_selection = parametr["_"]
+            except:
+                compatibility_selection="-"
             podik = Podik(
                 id = pod["$"]["id"],
                 available = self.__str_to_bool(pod["$"]["available"]),
@@ -47,6 +157,18 @@ class DBManager:
                 url=pod["url"][0],
                 picture=picture,
                 param=par,
+                flavour = flavour,
+                nicotine_strength = nicotine_strength[:2],
+                fluid_volume = fluid_volume,
+                battery_capacity = battery_capacity,
+                cartridge_capacity = cartridge_capacity,
+                resistance = resistance,
+                power = power,
+                atomizer_volume = atomizer_volume,
+                max_power = max_power,
+                puffs_number = puffs_number,
+                rechargeable = rechargeable,
+                compatibility_selection = compatibility_selection,
             )
             podik.save()
     def check(self):
@@ -60,7 +182,7 @@ class DBManager:
             try:
                 params = pod["param"]
                 for param in params:
-                    if povtorenie == None or param["$"]['name'] not in povtorenie:
+                    if pod["categoryId"][0]+": "+ param["$"]['name'] not in id_povtorenia:
                         povtorenie.append(param["$"]['name'])
                         id_povtorenia.append(pod["categoryId"][0]+": "+ param["$"]['name'])
             except:
@@ -91,6 +213,6 @@ class DBManager:
             podik.save()
         
 dbm = DBManager()
-dbm.check()
+#dbm.check()
 #dbm.addToDB()
 # dbm.addXmlToDB()

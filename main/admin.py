@@ -13,9 +13,9 @@ class XmlImportForm(forms.Form):
 class PodikAdmin(admin.ModelAdmin):
     list_display = ('id','name','price', 'currencyId', 'available', 'param', 'get_html_photo')
     list_display_links = ('id','name','price', 'available', 'currencyId')
-    search_fields = ('id','name', 'price')
+    search_fields = ('id','name', 'price', 'param')
     list_filter = ('available',)
-    fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'url', 'param','picture', 'get_html_photo')
+    fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'url', 'picture', 'get_html_photo', 'flavour' , 'nicotine_strength', 'fluid_volume', 'battery_capacity', 'cartridge_capacity', 'resistance', 'power', 'atomizer_volume', 'max_power', 'puffs_number', 'rechargeable', 'compatibility_selection')
     readonly_fields = ('get_html_photo', )
 
     def get_html_photo(self, object):
