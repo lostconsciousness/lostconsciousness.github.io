@@ -1,12 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from main.models import Podik
 from django.core import serializers
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .filters import PodFilter
 from django_filters.views import FilterView
+from django.contrib import messages
+from django.contrib.admin.utils import get_fields_from_path
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
+from django.urls import reverse
 
 from django.http import JsonResponse
+
+
+def my_view(request):
+    if request.method == 'POST':
+        my_input_value = request.POST.get('my_input')
+        print(my_input_value)
+    else:
+        print('sosi')
+        # Render the initial form
+        return render(request, 'admin/my_template.html')
 
 def filter_data(request):
     filtered_data = Podik.objects.all()

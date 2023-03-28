@@ -3,6 +3,17 @@
 {% block content %}
 
 <a href="upload-xml/" style = "margin-bottom: 20px; font-size: 18px; display: grid;">Завантажити xml-файл</a>
-
+<div class="submit-row">
+  <form method="post" action="">
+    {% csrf_token %}
+    <div class="form-row">
+      <label for="new_price">Новая цена:</label>
+      <input type="number" name="new_price" id="new_price" required>
+    </div>
+    <div class="form-row">
+      <input type="submit" value="Обновить цену">
+    </div>
+  </form>
+</div>
 {{block.super}}
 {% endblock %}
