@@ -1,27 +1,12 @@
-from django.shortcuts import render,redirect
-from main.models import Podik
+from django.shortcuts import render
+from main.models import Podik, NovaPost
 from django.core import serializers
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .filters import PodFilter
 from django_filters.views import FilterView
-from django.contrib import messages
-from django.contrib.admin.utils import get_fields_from_path
-from django.utils.translation import gettext_lazy as _
-from django.views.decorators.http import require_POST
-from django.urls import reverse
 
 from django.http import JsonResponse
-
-
-def my_view(request):
-    if request.method == 'POST':
-        my_input_value = request.POST.get('my_input')
-        print(my_input_value)
-    else:
-        print('sosi')
-        # Render the initial form
-        return render(request, 'admin/my_template.html')
 
 def filter_data(request):
     filtered_data = Podik.objects.all()
@@ -109,6 +94,7 @@ def homepage(request):
     hqd = serializers.serialize('json', allObjects.filter(categoryId = 288)[:50])
     ukrainian_salt = serializers.serialize('json', allObjects.filter(categoryId = 236)[:50])
     premium_salt = serializers.serialize('json', allObjects.filter(categoryId = 237)[:50])
+    novapost = serializers.serialize('json', NovaPost.objects.all())
     context = {
         "filter":podfilter.form,
         "pod": pods,
@@ -120,7 +106,8 @@ def homepage(request):
         "elf_bar":elf_bar,
         "hqd":hqd,
         "ukrainian_salt":ukrainian_salt,
-        "premium_salt":premium_salt
+        "premium_salt":premium_salt,
+        "novaPost":novapost,
     }
     return render(request, 'main/homepage.html', context)
 

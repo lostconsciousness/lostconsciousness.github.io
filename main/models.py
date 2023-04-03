@@ -46,3 +46,9 @@ class Podik(models.Model):
 
 
 # Create your models here.
+class NovaPost(models.Model):
+    city = models.CharField(max_length=255)
+    ref = models.CharField(max_length=37, primary_key=True)
+    warehouses = models.TextField()
+    area = models.CharField(max_length=255)
+    isAreaCenter = models.BooleanField(default=False)

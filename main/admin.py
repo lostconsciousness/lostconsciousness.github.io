@@ -19,7 +19,6 @@ from django.template.response import TemplateResponse
 class PodikForm(forms.Form):
 
     new_price = forms.CharField(max_length=255)
-
 class PodikAdmin(admin.ModelAdmin):
     actions = ['update_price']
 
@@ -39,7 +38,7 @@ class PodikAdmin(admin.ModelAdmin):
             'app_label': self.model._meta.app_label,
         }
 
-        return TemplateResponse(request, 'admin/main/podik/change_list.html', context)
+        return TemplateResponse(request, 'admin/change_list.html', context)
     update_price.short_description = "Обновить цену на указанное значение"
     #end
 
