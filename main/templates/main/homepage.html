@@ -524,12 +524,14 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-   
+    window.addEventListener("beforeunload", function() {
+        localStorage.clear();
+    });
     let itemsNamesInCart = [];
     let itemsNamesInCartJson = JSON.stringify(itemsNamesInCart)
     localStorage.setItem('itemsNamesInCart', itemsNamesInCartJson);
 
-    let itemsNamesCountInCart = [{name: "", count: 0}];
+    let itemsNamesCountInCart = [{name: "", picture: "", price: "", currencyId: "", id:"", count: 0}];
     let itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
     localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
 
@@ -982,16 +984,25 @@
                 if(!tg.MainButton.isVisible){
                     tg.MainButton.show();
                     generalCart++;
+
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
+                    let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
+                    let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
+                    let price_number = price.split(' ')[0];
+                    let currencyId = price.split(' ')[1];
+
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
+
                     let count = document.getElementById('in_cart_'+item).value;
                     let replacement = itemsNamesCountInCart.find(obj => obj.name === choose_div.innerHTML)
                     if (replacement){
                         replacement.count = count;
                     }
                     else{
-                        itemsNamesCountInCart.push({name: choose_div.innerHTML, count: count})
+                        itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
+                        console.log('123')
+                        console.log({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
                     tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
@@ -999,6 +1010,12 @@
                 else{
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
+
+                    let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
+                    let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
+                    let price_number = price.split(' ')[0];
+                    let currencyId = price.split(' ')[1];
+
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1007,7 +1024,9 @@
                         replacement.count = count;
                     }
                     else{
-                        itemsNamesCountInCart.push({name: choose_div.innerHTML, count: count})
+                        itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
+                        console.log('123')
+                        console.log({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     
                     console.log(itemsNamesCountInCart)
@@ -1059,6 +1078,12 @@
                 if(!tg.MainButton.isVisible){
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
+
+                    let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
+                    let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
+                    let price_number = price.split(' ')[0];
+                    let currencyId = price.split(' ')[1];
+
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1067,7 +1092,7 @@
                         replacement.count = count;
                     }
                     else{
-                        itemsNamesCountInCart.push({name: choose_div.innerHTML, count: count})
+                        itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
                     tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
@@ -1076,6 +1101,12 @@
                 else{
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
+
+                    let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
+                    let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
+                    let price_number = price.split(' ')[0];
+                    let currencyId = price.split(' ')[1];
+
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1084,7 +1115,7 @@
                         replacement.count = count;
                     }
                     else{
-                        itemsNamesCountInCart.push({name: choose_div.innerHTML, count: count})
+                        itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
                     tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
@@ -1102,7 +1133,7 @@
             //let itemsNamesInCart = JSON.parse(itemsNamesInCartJson);
             //tg.sendData(itemsNamesInCart.join(', '));
             //localStorage.clear();
-            to_cart("{{novaPost}}")
+            to_cart({{novaPost}})
         });
     }
 
@@ -1205,12 +1236,23 @@
 
         const item = itemsNamesCountInCart.find(obj => obj.name === name);
         if (item) {
+            if(item.count >= 1) {
+            plus.classList = "btn_plus visible"; 
+            minus.classList = "btn_minus visible"; 
+            mainbtn.classList = "button_card invisible"; 
+            inCart.classList = "count visible";
+        }
+        else{
+            plus.classList = "btn_plus invisible"; 
+            minus.classList = "btn_minus invisible"; 
+            mainbtn.classList = "button_card visible"; 
+            inCart.classList = "count invisible";
+        }
             inCart.setAttribute('value', item.count);
         }   
-        plus.classList = "btn_plus visible"; 
-        minus.classList = "btn_minus visible"; 
-        mainbtn.classList = "button_card invisible"; 
-        inCart.classList = "count visible";
+
+
+        
     }
 
     function AddToCard(id,i){
@@ -1286,7 +1328,15 @@
     }
     
     function to_menu(){
-    
+        let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
+        let tg = window.Telegram.WebApp
+        tg.expand()
+        tg.MainButton.textColor = "#FFFFFF";
+        tg.MainButton.color = "#2cab37";
+        if(generalCart!=0){
+            tg.MainButton.setText("Переглянути замовлення("+generalCart+")")
+            tg.MainButton.show()
+        }
         const content = document.querySelector('.grid')
         const header = document.querySelector('.header') 
         const btn_container = document.querySelector('#btn_container')
@@ -1538,7 +1588,75 @@
     
     }
 
+    function cart_add(button, count){
+
+        let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
+        generalCart++;
+        localStorage.setItem('generalCartCount',generalCart)
+
+        let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
+        let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+        let inCart = button.parentElement.querySelector('.counter__value');
+        let name = button.parentElement.parentElement.parentElement.querySelector('.name_cart_card').innerHTML;
+        console.log(name)
+        let item = itemsNamesCountInCart.find(obj => obj.name == name)
+        if(item){console.log('found')}
+        item.count++;
+        inCart.setAttribute('value', item.count);
+        itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
+        localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
+    }
+    function cart_subtract(button,count){
+        let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
+        generalCart--;
+        localStorage.setItem('generalCartCount',generalCart)
+
+        let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
+        let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+        let inCart = button.parentElement.querySelector('.counter__value');
+        let name = button.parentElement.parentElement.parentElement.querySelector('.name_cart_card').innerHTML;
+        console.log(name)
+        let item = itemsNamesCountInCart.find(obj => obj.name == name)
+        if(item){console.log('found')}
+        item.count--;
+        if (item.count === 0){
+            button.parentElement.parentElement.parentElement.classList = 'invisible';
+        }
+        inCart.setAttribute('value', item.count);
+        itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
+        localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
+
+    }
+
+    function disappear(button){
+        let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
+        let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+
+        let name = button.parentElement.parentElement.querySelector('.name_cart_card').innerHTML;
+        console.log(name)
+        let item = itemsNamesCountInCart.find(obj => obj.name == name)
+
+        let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
+        generalCart= generalCart - item.count;
+        item.count = 0;
+        localStorage.setItem('generalCartCount',generalCart)
+        itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
+        localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
+        button.parentElement.parentElement.classList = 'invisible';
+    }
+
     function to_cart(nvp){
+        $(document).ready(function(){
+            let tg = window.Telegram.WebApp;
+            tg.expand()
+            tg.MainButton.textColor = "#FFFFFF";
+            tg.MainButton.color = "#2cab37";
+            tg.MainButton.setText("Підтвердити замовлення")
+        })
+        
+        let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
+        let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+
         const AddedToCart = document.querySelector('.AddedToCart')
         const content = document.querySelector('.grid')
         const header = document.querySelector('.header') 
@@ -1549,29 +1667,32 @@
         //const nvp = {{novaPost}}
         
         btn_container.innerHTML = '';
-        
+        AddedToCart.innerHTML = '';
+        content.innerHTML = '';
         header.innerHTML = '<div class="back_to_menu" onclick = "to_menu()" > <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>';
-        
-        AddedToCart.innerHTML=`
+
+        itemsNamesCountInCart.forEach(item => {
+            if(item.name != "" && item.count != 0){
+
+            
+            AddedToCart.innerHTML+=`
             <div class= "cart_card">
 
                 
 
                 <div class = "img_cart_card">
-                    <img src="https://nargilemm.com/image/cache/catalog/1111/elf-bar-bc5000-cranberry-grape-500x500.png" class="img_menu" alt>
+                    <img src=${item.img_src} class="img_menu" alt>
                 </div>
 
                 
 
-                <div class = "name_cart_card">
-                    Drag Max Pod Mod Kit Brown
-                </div>
+                <div class = "name_cart_card">${item.name}</div>
 
                 
                 
                 <div class = "sum_cart_card">
                 
-                    <button class="close__button" onclick="">
+                    <button class="close__button" onclick="disappear(this)">
 
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -1590,37 +1711,58 @@
 
                     <p class="price"> 
 
-                        330.00 грн 
+                        ${item.price} ${item.currencyId}
                         
                     </p>
                         
                     <div class="cart__counter" style="display: flex">
 
-                        <button class="counter__button">-</button>
+                        <button class="counter__button" onclick = "cart_subtract(this, '${item.count}')">-</button>
 
-                        <input type="text" value="1" class="counter__value">
+                        <input type="text" value="${item.count}" class="counter__value">
 
-                        <button class="counter__button">+</button>
+                        <button class="counter__button" onclick = "cart_add(this, '${item.count}')">+</button>
 
                     </div>
                 </div>
             </div> `
-
-       
-        
-        content.innerHTML='<div class="nvp_text">Оберіть область</div>'
-        content.innerHTML+='<select id="fruits" name="fruits" onchange="get_cities({{novaPost}})"> <option value="---------">---------</option></select>'
-        const select = document.querySelector('#fruits')
-        for (i = 0; i < nvp.length; i++)
-        {
-            if (nvp[i]['fields']['isAreaCenter']){
-                select.innerHTML +=`<option value="${nvp[i]['fields']['area']}">${nvp[i]['fields']['area']}</option>`
-            }
         }
-        content.innerHTML+='<div class="nvp_text">Оберіть місто</div>'
-        content.innerHTML+='<select id="towns" name="towns" onchange="get_warehouses({{novaPost}})"><option value="---------">---------</option></select>'
-        content.innerHTML+='<div class="nvp_text" >Оберіть відділення</div>'
-        content.innerHTML+='<select id="warehouses" name="warehouses" ><option value="---------">---------</option></select>'
+        });
+       
+        $.ajax({
+            url: '{%url "novaPost"%}',
+            type: 'GET',
+            data: "",
+            beforeSend: function(){},
+            success: function (response){
+                console.log(response.novaPost)
+                const nvp1 = JSON.parse(response.novaPost)
+                const nvps = JSON.stringify(response.novaPost)
+                content.innerHTML='<div class="nvp_text">Оберіть область</div>'
+                content.innerHTML+=`<select id="fruits" name="fruits" onchange='get_cities(${response.novaPost.replace(/'/g,"")})'> <option value="---------">---------</option></select>`
+                const select = document.querySelector('#fruits')
+                console.log(nvp1.length)
+                nvp1.map(item => {
+                    console.log(item)
+                    
+                        if (item.fields.isAreaCenter){
+                            select.innerHTML +=`<option value="${item.fields.area}">${item.fields.area}</option>`
+                        }
+                    
+                    
+                })
+                content.innerHTML+='<div class="nvp_text">Оберіть місто</div>'
+                    content.innerHTML+=`<select id="towns" name="towns" onchange='get_warehouses(${response.novaPost.replace(/'/g,"")})'><option value="---------">---------</option></select>`
+                    content.innerHTML+='<div class="nvp_text" >Оберіть відділення</div>'
+                    content.innerHTML+='<select id="warehouses" name="warehouses" ><option value="---------">---------</option></select>'
+                
+            },
+            error: function(err){
+                console.log(err);
+            }
+        })
+        
+       
         
     }
 

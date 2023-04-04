@@ -10,36 +10,40 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
 from django.template.response import TemplateResponse
-
+from django.contrib import messages
+from django.utils.translation import ngettext
+from collections import namedtuple
 
 # class XmlImportForm(forms.Form):
 #     xml_upload = forms.FileField()
 
 #start
-class PodikForm(forms.Form):
 
-    new_price = forms.CharField(max_length=255)
+
+
+# class PodikForm(forms.Form):
+#     new_price = forms.CharField(max_length=255)
 class PodikAdmin(admin.ModelAdmin):
     actions = ['update_price']
 
     def update_price(self, request, queryset):
-        if request.method == 'POST':
-            new_price = request.POST.get('new_price')  # Получаем значение новой цены из POST-запроса
+        # Перенаправляет на страницу обновления цены.
+        return HttpResponseRedirect(reverse('admin:update_price', args=[queryset.values_list('id', flat=True)]))
+    update_price.short_description = 'Обновить цену'
 
-            if not new_price:
-                self.message_user(request, "Вы не ввели новую цену")  # Выводим сообщение, если значение не было введено
-            else:
-                queryset.update(price=new_price)
-                self.message_user(request, f"Цена успешно обновлена на {new_price}")  # Выводим сообщение об успешном обновлении
-                return redirect(request.get_full_path())  # Перенаправляем обратно на страницу со списком объектов
-
-        context = {
-            'opts': self.model._meta,
-            'app_label': self.model._meta.app_label,
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        ActionDict = namedtuple('ActionDict', actions.get('update_price')._asdict().keys())
+        actions = ActionDict(*[ad._asdict() for ad in actions.values()])
+        update_price_dict = actions.update_price._asdict()
+        update_price_dict['form'] = {
+            'fields': [('new_price', admin.FloatField())],
+            'label': 'Обновить цену для выбранных объектов'
         }
+        actions = actions._replace(update_price=type(actions.update_price)(**update_price_dict))
+        return actions
+    
 
-        return TemplateResponse(request, 'admin/change_list.html', context)
-    update_price.short_description = "Обновить цену на указанное значение"
     #end
 
 

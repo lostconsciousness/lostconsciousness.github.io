@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import heater, homepage, iqos, load_more, filter_data
+from main.views import heater, homepage, iqos, load_more, filter_data, novaPost
 from . import settings
 from django.conf.urls.static import static
 
@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('load_more/', load_more, name = "load_more"),
     path('filter_data/', filter_data, name = "filter_data"),
+    path('novaPost/', novaPost, name="novaPost"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

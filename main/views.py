@@ -8,6 +8,12 @@ from django_filters.views import FilterView
 
 from django.http import JsonResponse
 
+def novaPost(request):
+    novapost = serializers.serialize('json', NovaPost.objects.all())
+    context = {"novaPost":novapost,}
+    return JsonResponse(context)
+   
+
 def filter_data(request):
     filtered_data = Podik.objects.all()
     filter = PodFilter(request.GET, queryset=filtered_data)
@@ -94,7 +100,7 @@ def homepage(request):
     hqd = serializers.serialize('json', allObjects.filter(categoryId = 288)[:50])
     ukrainian_salt = serializers.serialize('json', allObjects.filter(categoryId = 236)[:50])
     premium_salt = serializers.serialize('json', allObjects.filter(categoryId = 237)[:50])
-    novapost = serializers.serialize('json', NovaPost.objects.all())
+    
     context = {
         "filter":podfilter.form,
         "pod": pods,
@@ -107,7 +113,7 @@ def homepage(request):
         "hqd":hqd,
         "ukrainian_salt":ukrainian_salt,
         "premium_salt":premium_salt,
-        "novaPost":novapost,
+
     }
     return render(request, 'main/homepage.html', context)
 
