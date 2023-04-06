@@ -52,3 +52,14 @@ class NovaPost(models.Model):
     warehouses = models.TextField()
     area = models.CharField(max_length=255)
     isAreaCenter = models.BooleanField(default=False)
+
+
+class Offers(models.Model):
+    username = models.CharField(max_length=255, verbose_name="Ім'я користувача")
+    offer = models.TextField(verbose_name="Замовлення")
+    amount = models.CharField(max_length=255, verbose_name="Ціна")
+    name = models.CharField(max_length=255, verbose_name="ПІБ")
+    phone_number = models.CharField(max_length=255, verbose_name="Номер телефону")
+    area = models.CharField(max_length=255, verbose_name="Область")
+    city = models.CharField(max_length=255, verbose_name="Місто")
+    warehouse = models.CharField(max_length=255, verbose_name="Пункт видачі")

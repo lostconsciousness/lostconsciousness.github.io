@@ -169,6 +169,7 @@
         .page{
             position: relative;
             top: 8vh;
+            margin-bottom: 20vh;
         }
         
         .arrow{
@@ -230,12 +231,13 @@
         .count{
             font-size: 2.5vh;
             font-weight: bold;
-            width: 4vh;
-            height: 4vh;
-            background: #fff600;
+            width: 3vh;
+            height: 3vh;
+            background: #fef978;
             border-radius: 100%;
             text-align: center;
             margin-left: 85%;
+            border: none;
         }
         .cart{
             width: 4vh;
@@ -280,23 +282,32 @@
             border: 0;
             outline: none;
             background: none;
-            width: 70%;
+            width: 80%;
             font-size: 2.5vh;
             border-color: #E1D7C6;
             border-left: solid 1px #E1D7C6;
             border-right: solid 1px #E1D7C6;
             border-top: solid 1px #E1D7C6;
+            
         }
 
         .btn_filter_submit{
-            position: relative;
-            top: 2vh;
-            font-size: 2vh;
+            background-color: mediumSeaGreen;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 33px;
+            padding: 14px 10px 16px;
+            transition: all 0.6s ease;
             border: none;
-            width: 93%;
-            color: black;
-            padding: 0.5vh;
-            background: #8eecad;
+            cursor: pointer;
+            opacity: 1;
+            position: fixed;
+            width: 100%;
+            z-index: 11;
+            bottom: 0px;
+            margin-left: -5%;
+            display: block;
         }
         #id_price_0{
             background: none;
@@ -322,7 +333,14 @@
             background-color: none;
         }
         label{
-            display:flex;
+            display: flex;
+        }
+        .label_cart{
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 15px;
+            color: black;
+            margin: 1vh 0 4px 0;
         }
         #id_nicotine_strength,#id_max_power, #id_puffs_number, #id_atomizer_volume, #id_power, #id_battery_capacity, #id_fluid_volume,#id_resistance{
             display: grid;
@@ -362,7 +380,7 @@
             transform: scale(1);
           }
 
-          #fruits, #towns, #warehouses{
+          #cities, #towns, #warehouses{
             color: #333;
             padding: 0.7vh;
             border-style: none;
@@ -370,13 +388,12 @@
             outline: none;
             background: none;
             width: 90%;
-            font-size: 2.5vh;
+            font-size: 16px;
             border-color: #E1D7C6;
             border-left: solid 1px #E1D7C6;
             border-right: solid 1px #E1D7C6;
             border-top: solid 1px #E1D7C6;
             grid-column: span 2;
-            margin: 2vh;
           }
           .nvp_text{
             text-align: center;
@@ -454,6 +471,63 @@
             background-color: transparent;
             cursor: pointer;
         }
+        .contact_title{
+            font-weight: 600;
+            font-size: 2vh;
+            color: black;
+            grid-column: span 2;
+        }
+        .input_cart{
+            margin: 5px;
+            border: none;
+            border-bottom: 1px solid black;
+            background-color: #E1D7C6;
+            width: 80%;
+            outline: none;
+            color: black;
+            padding: 0 10px 4px 16px;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            grid-column: span 2;
+        }
+        .input_cart::before {
+            background-color: #E1D7C6;
+        }
+        #towns_warehouses{
+            grid-column: span 2;
+        }
+
+
+        .input_comment{
+            border: none;
+            border-bottom: 1px solid black;
+            background-color: #E1D7C6;
+            width: 90%;
+            outline: none;
+            color: black;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 20px;
+            grid-column: span 2;
+        }
+        .btn_to_cart{
+            background-color: mediumSeaGreen;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 33px;
+            padding: 14px 10px 16px;
+            border: none;
+            cursor: pointer;
+            opacity: 1;
+            position: fixed;
+            width: 100%;
+            z-index: 11;
+            bottom: 0px;
+        }
+
+
 
 
     </style>
@@ -516,14 +590,16 @@
             <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod', '')"> Підібрати товар</div>
         </div>
         <div id="btn_container">
-
+            
         </div>
     </div>
+    <button type = "submit" class = "btn_to_cart invisible" onclick = "to_cart({{novaPost}})"/>
 </body>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    let generalCart = 1;
     window.addEventListener("beforeunload", function() {
         localStorage.clear();
     });
@@ -541,6 +617,7 @@
         const content = document.querySelector('.grid') 
         const filter = document.querySelector('.filter') 
         const btn_container = document.querySelector('#btn_container') 
+        const main_button = document.querySelector('.btn_to_cart')
         const header = document.querySelector('.header') 
         
         btn_container.innerHTML = '';
@@ -625,15 +702,15 @@
         tg.expand()
         $('#filter-form').submit(function() {
             data_filter = $('#filter-form').serialize()
+            main_button.classList = "btn_to_cart visible"
              this.style.display = 'none';
-             tg.MainButton.show();
             // остальной код обработки формы
           });
             tg.MainButton.hide();
         $(document).ready(function() {
 
             
-
+            main_button.classList = "btn_to_cart invisible"
                 var categoryId_input = $('.catId_input');
                 var categoryId_value = categoryId_input.val(categId);
                 let fluid_volume = $('.fluid_volume')
@@ -896,7 +973,7 @@
                 data: $(this).serialize(),
                 dataType: 'json',
                 success: function(data) {
-                    
+                    main_button.classList = "btn_to_cart visible"
                   // обновление таблицы с результатами
                     var my_div = $('#my-div');
                     my_div.empty();
@@ -942,13 +1019,19 @@
                 saveInfo();
 
                     }
-                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>` 
+                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>
+                    ` 
                     my_div.html(html);
                 }
                 catch(e){
                     console.log(e)
                     if(content.textContent.trim() === ''){
-                        content.innerHTML = "Нажаль, у нашому асортименті немає продукції за цими фільтрами"
+                        content.innerHTML = `<div style = "display: flex;
+                        grid-column: span 2;
+                        font-weight: bold;
+                        color: rgb(0, 0, 0);
+                        margin-bottom: 2vh;
+                        font-size: 100%;">Нажаль, у нашому асортименті немає продукції за цими фільтрами </div>`
                     }
                 }
          
@@ -963,6 +1046,10 @@
         //let itemsNamesInCart = parseInt(localStorage.getItem('itemsNamesInCart')) || 0;
         let itemsNamesInCartJson = localStorage.getItem('itemsNamesInCart');
         let itemsNamesInCart = JSON.parse(itemsNamesInCartJson);
+        const main_button = document.querySelector('.btn_to_cart') 
+        const buttons = document.querySelectorAll('.btn_plus');
+        const buttons1 = document.querySelectorAll('.btn_minus');
+        const buttons2 = document.querySelectorAll('.button_card');
 
         let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
         let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
@@ -971,29 +1058,20 @@
         tg.expand()
         tg.MainButton.textColor = "#FFFFFF";
         tg.MainButton.color = "#2cab37";
-        
-        let item = "";
-        let res = [];
-        let item_count1 = "";
-        const buttons = document.querySelectorAll('.btn_plus');
-        const buttons1 = document.querySelectorAll('.btn_minus');
-        const buttons2 = document.querySelectorAll('.button_card');
-        let item_count = 0;
         buttons.forEach((button) => {
             button.addEventListener('click', function(){
                 if(!tg.MainButton.isVisible){
-                    tg.MainButton.show();
                     generalCart++;
-
+        
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
                     let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
                     let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
                     let price_number = price.split(' ')[0];
                     let currencyId = price.split(' ')[1];
-
+        
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
-
+        
                     let count = document.getElementById('in_cart_'+item).value;
                     let replacement = itemsNamesCountInCart.find(obj => obj.name === choose_div.innerHTML)
                     if (replacement){
@@ -1005,17 +1083,19 @@
                         console.log({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
+                    main_button.classList = 'btn_to_cart visible'
+                    main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    //tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
                 }
                 else{
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
-
+        
                     let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
                     let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
                     let price_number = price.split(' ')[0];
                     let currencyId = price.split(' ')[1];
-
+        
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1031,7 +1111,10 @@
                     
                     console.log(itemsNamesCountInCart)
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
+        
+                    main_button.classList = 'btn_to_cart visible'
+                    main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    //tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
                 }
                 localStorage.setItem('generalCartCount', generalCart);
                 itemsNamesInCartJson = JSON.stringify(itemsNamesInCart)
@@ -1052,7 +1135,16 @@
                         replacement.count--;
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
+                    console.log("gencart" + generalCart)
+                    if(generalCart==0){
+                        main_button.classList = 'btn_to_cart invisible'
+                        main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    }
+                    else{
+                        main_button.classList = 'btn_to_cart visible'
+                        main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    }
+
                 }
                 else{
                     generalCart--;
@@ -1064,7 +1156,15 @@
                         replacement.count--;
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
+                    if(generalCart==0){
+                        main_button.classList = 'btn_to_cart invisible'
+                        main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    }
+                    else{
+                        main_button.classList = 'btn_to_cart visible'
+                        main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+                    }
+                    
                 }
                 localStorage.setItem('generalCartCount', generalCart);
                 itemsNamesInCartJson = JSON.stringify(itemsNamesInCart)
@@ -1078,12 +1178,12 @@
                 if(!tg.MainButton.isVisible){
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
-
+        
                     let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
                     let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
                     let price_number = price.split(' ')[0];
                     let currencyId = price.split(' ')[1];
-
+        
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1095,18 +1195,18 @@
                         itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
-                    tg.MainButton.show();
+                    main_button.classList = 'btn_to_cart visible'
+                    main_button.innerHTML =`Переглянути замовлення (${generalCart})`
                 }
                 else{
                     generalCart++;
                     item = this.parentElement.parentElement.querySelector('.count').dataset.item_id;
-
+        
                     let img_src =  this.parentElement.parentElement.querySelector('.img_menu').src
                     let price = this.parentElement.parentElement.querySelector('.button_card').innerHTML;
                     let price_number = price.split(' ')[0];
                     let currencyId = price.split(' ')[1];
-
+        
                     let choose_div = document.getElementById('name_'+item)
                     itemsNamesInCart.push(choose_div.innerHTML);
                     let count = document.getElementById('in_cart_'+item).value;
@@ -1118,7 +1218,8 @@
                         itemsNamesCountInCart.push({name: choose_div.innerHTML, picture: img_src, price: price_number, currencyId: currencyId, id: item,count: count})
                     }
                     item_count1 = document.getElementById('in_cart').innerHTML;
-                    tg.MainButton.setText("Переглянути замовлення ("+generalCart+")");
+                    main_button.classList = 'btn_to_cart visible'
+                    main_button.innerHTML =`Переглянути замовлення (${generalCart})`
                 }
                 localStorage.setItem('generalCartCount', generalCart);
                 itemsNamesInCartJson = JSON.stringify(itemsNamesInCart)
@@ -1128,21 +1229,22 @@
             });
           });
           
-        tg.onEvent("mainButtonClicked", function (){
-            //let itemsNamesInCartJson = localStorage.getItem('itemsNamesInCart');
-            //let itemsNamesInCart = JSON.parse(itemsNamesInCartJson);
-            //tg.sendData(itemsNamesInCart.join(', '));
-            //localStorage.clear();
-            to_cart({{novaPost}})
-        });
+
+        let item = "";
+        let res = [];
+        let item_count1 = "";
+        //const buttons = document.querySelectorAll('.btn_plus');
+        //const buttons1 = document.querySelectorAll('.btn_minus');
+        //const buttons2 = document.querySelectorAll('.button_card');
+        let item_count = 0;
+
     }
 
     function to_catalog(data, name, filters = null, subdirectory=null) {
         $(document).ready(function() {
-
             saveInfo();
             });
-            
+
         console.log("fdsfdsf  ==== "+filters)
         let menus = {'disposable':'to_disposable()', 'liquids':'to_liquds()', null:'to_menu()'}
         let filter_func = {'disposable':"to_filters({{pod}}, 'pod', '239')", 'liquids':"to_filters({{pod}}, 'pod', '208')", "pod_system":"to_filters({{pod}}, 'pod', '220')",
@@ -1158,7 +1260,7 @@
         const filter = document.querySelector('.filter') 
         filter.innerHTML = '';
 
-        btn_container.innerHTML = '';
+        //btn_container.innerHTML = '<button type="submit" class="btn_to_cart" onclick= "to_cart({{novaPost}})">Переглянути замовлення</button>';
 
         
 
@@ -1219,7 +1321,7 @@
             </div>`
         }
         }
-        btn_container.innerHTML += `
+        btn_container.innerHTML = `
         <button class ="btn_loadmore" onclick = "load_more('${name}')">load more</button>` 
     }
 
@@ -1331,15 +1433,20 @@
         let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
         let tg = window.Telegram.WebApp
         tg.expand()
-        tg.MainButton.textColor = "#FFFFFF";
+        tg.MainButton.hide()
         tg.MainButton.color = "#2cab37";
-        if(generalCart!=0){
-            tg.MainButton.setText("Переглянути замовлення("+generalCart+")")
-            tg.MainButton.show()
+        const btn_container = document.querySelector('#btn_container')
+        const main_button = document.querySelector('.btn_to_cart')
+        if(generalCart==0){
+            main_button.classList = 'btn_to_cart invisible'
+            main_button.innerHTML =`Переглянути замовлення (${generalCart})`
+        }
+        else{
+            main_button.classList = 'btn_to_cart visible'
+            main_button.innerHTML =`Переглянути замовлення (${generalCart})`
         }
         const content = document.querySelector('.grid')
         const header = document.querySelector('.header') 
-        const btn_container = document.querySelector('#btn_container')
         const filter = document.querySelector('.filter') 
         const AddedToCart = document.querySelector('.AddedToCart')
         AddedToCart.innerHTML ='';
@@ -1390,10 +1497,12 @@
             </div>
             <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod', '')"> Підібрати товар</div>
         </div>
+        <button id = "btn" value = "primenit"/>
         `
     }
     
     function load_more_filtered(name, data_filter){
+        let generalCart = localStorage.getItem('generalCartCount')
         let _current_item = $('.catalog').length;
         console.log(_current_item);
         const container = document.querySelector('.grid');
@@ -1432,7 +1541,7 @@
                     }
                     saveInfo();
                 }
-                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>` 
+                    btn_container.innerHTML =`<button class ="btn_loadmore" id = "my-button" onclick = "load_more_filtered('${name}', '${data_filter}')">load more</button>`
             },
             error: function(err){
                 console.log(err);
@@ -1491,13 +1600,14 @@
     function to_disposable(){
         const content = document.querySelector('.grid') 
         const header = document.querySelector('.header') 
-        const btn_container = document.querySelector('#btn_container') 
+        const btn_container = document.querySelector('#btn_container')
+        const main_button = document.querySelector('.btn_to_cart') 
 
 
         const AddedToCart = document.querySelector('.AddedToCart')
         AddedToCart.innerHTML ='';
 
-        btn_container.innerHTML = '';
+        main_button.innerHTML =`<button type="submit" class="btn_to_cart visible" onclick= "to_cart({{novaPost}})">Переглянути замовлення (${generalCart})</button>`
         header.innerHTML = `
         <div class="back_to_menu" onclick = "to_menu()" > 
             <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
@@ -1541,13 +1651,14 @@
     function to_liquds(){
         const content = document.querySelector('.grid') 
         const header = document.querySelector('.header') 
-        const btn_container = document.querySelector('#btn_container') 
+        const btn_container = document.querySelector('#btn_container')
+        const main_button = document.querySelector('.btn_to_cart') 
 
 
         const AddedToCart = document.querySelector('.AddedToCart')
         AddedToCart.innerHTML ='';
 
-        btn_container.innerHTML = '';
+        main_button.innerHTML =`<button type="submit" class="btn_to_cart visible" onclick= "to_cart({{novaPost}})">Переглянути замовлення (${generalCart})</button>`
         header.innerHTML = `
         <div class="back_to_menu" onclick = "to_menu()" > 
             <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
@@ -1606,6 +1717,7 @@
         itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
         localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
     }
+
     function cart_subtract(button,count){
         let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
         generalCart--;
@@ -1646,12 +1758,52 @@
     }
 
     function to_cart(nvp){
+
         $(document).ready(function(){
+            let main_button = document.querySelector('.btn_to_cart')
+            main_button.classList = "btn_to_cart invisible"
             let tg = window.Telegram.WebApp;
             tg.expand()
             tg.MainButton.textColor = "#FFFFFF";
             tg.MainButton.color = "#2cab37";
             tg.MainButton.setText("Підтвердити замовлення")
+            tg.MainButton.show()
+
+            
+           
+            main_btn_container.addEventListener('click', function() {
+                
+            })
+            
+            tg.onEvent("mainButtonClicked", function (){
+                let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
+                let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+                let phone_number = document.getElementById('phone_number').value
+                let nameInput = document.getElementById('name')
+                let name = nameInput.value
+                const warehousesSelect = document.getElementById('warehouses').value;
+                const areasSelect = document.getElementById('cities').value;
+                const citiesSelect = document.getElementById('towns').value;
+                let s = "";
+                let i = 0;
+                let cid = ""
+                itemsNamesCountInCart.forEach(item=>{
+                    if(item.count != 0){
+                        s=s+item.name+" - "+ item.count + " шт.\n";
+                        i = i + parseInt(item.price)*parseInt(item.count);
+                        cid = item.currencyId
+                    }
+            
+                })
+                
+                let res = s + "\n На суму "+ i + cid + "\nНомер телефону: "+phone_number+"\nПІБ: "+ name + "\nОбласть: "+ areasSelect + "\nМісто "+ citiesSelect + "\nПункт видачі: "+ warehousesSelect;
+                let offer = s;
+                let price = i + " UAH";
+                let result = {'message': res, 'offer': offer, 'amount': price, 'phone_number': phone_number, 'name': name, 'area': areasSelect, 'city': citiesSelect, 'warehouse': warehousesSelect }
+                const resultJSON = JSON.stringify(result);
+                tg.sendData(resultJSON);
+                localStorage.clear();
+            });
         })
         
         let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
@@ -1661,18 +1813,19 @@
         const content = document.querySelector('.grid')
         const header = document.querySelector('.header') 
         const btn_container = document.querySelector('#btn_container')
+        const main_btn_container = document.querySelector('.btn_to_cart')
         const filter = document.querySelector('.filter') 
 
         filter.innerHTML = '';
         //const nvp = {{novaPost}}
-        
+        main_btn_container.innerHTML = '';
         btn_container.innerHTML = '';
         AddedToCart.innerHTML = '';
         content.innerHTML = '';
         header.innerHTML = '<div class="back_to_menu" onclick = "to_menu()" > <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>';
 
         itemsNamesCountInCart.forEach(item => {
-            if(item.name != "" && item.count != 0){
+            if(item.count != 0){
 
             
             AddedToCart.innerHTML+=`
@@ -1728,22 +1881,32 @@
             </div> `
         }
         });
-       
+        content.innerHTML+=`
+
+            <p class="contact_title">Реквізити для доставки</p>
+
+                <label for="name" id = "la" class="label_cart">ПІБ*</label>
+                <input type="text" id="name" class="input_cart" name="name" placeholder="Іванов Іван Іванович" >
+
+                <label for="phone_number" class="label_cart">Телефон*</label>
+                <input type="text" id="phone_number" class="input_cart" name="phone_number" placeholder="+380 000 0000">
+         `
+        
         $.ajax({
             url: '{%url "novaPost"%}',
             type: 'GET',
             data: "",
             beforeSend: function(){},
             success: function (response){
-                console.log(response.novaPost)
                 const nvp1 = JSON.parse(response.novaPost)
                 const nvps = JSON.stringify(response.novaPost)
-                content.innerHTML='<div class="nvp_text">Оберіть область</div>'
-                content.innerHTML+=`<select id="fruits" name="fruits" onchange='get_cities(${response.novaPost.replace(/'/g,"")})'> <option value="---------">---------</option></select>`
-                const select = document.querySelector('#fruits')
+                content.innerHTML+=`
+                    <label for="cities" class="label_cart">Оберіть область</label>
+                    
+                    <select id="cities" name="cities" onchange='get_cities(${response.novaPost.replace(/'/g,"")})'> <option value="---------">---------</option></select>`
+                const select = document.querySelector('#cities')
                 console.log(nvp1.length)
                 nvp1.map(item => {
-                    console.log(item)
                     
                         if (item.fields.isAreaCenter){
                             select.innerHTML +=`<option value="${item.fields.area}">${item.fields.area}</option>`
@@ -1751,34 +1914,67 @@
                     
                     
                 })
-                content.innerHTML+='<div class="nvp_text">Оберіть місто</div>'
-                    content.innerHTML+=`<select id="towns" name="towns" onchange='get_warehouses(${response.novaPost.replace(/'/g,"")})'><option value="---------">---------</option></select>`
-                    content.innerHTML+='<div class="nvp_text" >Оберіть відділення</div>'
-                    content.innerHTML+='<select id="warehouses" name="warehouses" ><option value="---------">---------</option></select>'
                 
+                
+                content.innerHTML+=`
+                <div class="invisible" id = "towns_warehouses">
+                    <label for="towns" class="label_cart ">Оберіть місто</label>
+    
+                    <select id="towns" name="towns"  onchange='get_warehouses(${response.novaPost.replace(/'/g,"")})' class=""><option value="---------">---------</option></select>
+                
+                    <label for="warehouses" class="label_cart "">Оберіть відділення</label>
+    
+                    <select id="warehouses" name="warehouses " class="" ><option value="---------">---------</option></select> 
+                </div>
+        
+                    
+        
+                ` 
+                content.innerHTML+=`
+                
+                <label for="comment" class="label_cart">Коментар</label>
+        
+                <textarea id="comment" name="comment" rows="3" cols="33" class="input_comment" placeholder ="It was a dark and stormy night...">  </textarea>
+                
+                <div style= "width:100%; height:150px"></div>`
+
             },
             error: function(err){
                 console.log(err);
             }
         })
-        
+
        
         
+
     }
 
     function get_cities(nvp){
-        const select = document.querySelector('#fruits');
+        const select = document.querySelector('#cities');
         const town_select = document.querySelector('#towns')
         town_select.innerHTML=''
         let area = select.value;
-        console.log(area)
+       
         for (i = 0; i < nvp.length; i++)
         {
-            //console.log(nvp[i]['fields']['city'])
+            
             if (nvp[i]['fields']['area'] == area){
                 town_select.innerHTML +=`<option value="${nvp[i]['fields']['city']}">${nvp[i]['fields']['city']}</option>`
             }
         }   
+
+        var e = document.getElementById("cities");
+        var value = e.value;
+        var towns_warehouses = document.getElementById('towns_warehouses')
+
+        if(value != "---------"){
+            towns_warehouses.classList = "visible";
+            
+        }
+        else{
+            towns_warehouses.classList = "invisible";
+            
+        }
     }
 
     function get_warehouses(nvp){

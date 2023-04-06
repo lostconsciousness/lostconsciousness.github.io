@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import heater, homepage, iqos, load_more, filter_data, novaPost
+from main.views import heater, homepage, iqos, load_more, filter_data, novaPost, update_price, my_views
 from . import settings
 from django.conf.urls.static import static
 
@@ -28,6 +28,8 @@ urlpatterns = [
     path('load_more/', load_more, name = "load_more"),
     path('filter_data/', filter_data, name = "filter_data"),
     path('novaPost/', novaPost, name="novaPost"),
+    path('update_price/<str:ids>/', update_price, name = 'update_price'),
+    path('my_view/', my_views, name = "my_view"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

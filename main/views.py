@@ -4,13 +4,56 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .filters import PodFilter
+from .forms import UpdatePriceForm
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django_filters.views import FilterView
 
 from django.http import JsonResponse
 
+def my_views(request):
+    if  request.method == 'POST':
+        data = request.POST.get('price')
+        print(f"data = {data}")
+
+        response_data = {'result': 'success'}
+        return JsonResponse(response_data)
+    else:
+        response_data = {'error': 'Invalid request'}
+        return JsonResponse(response_data)
+
+def update_price(request, ids):
+    # Получаем список выбранных объектов.
+    ids = [pk for pk in ids.split(',')]
+    products = Podik.objects.filter(pk__in=ids)
+
+    if request.method == 'POST':
+        # Если форма отправлена, обновляем цену для каждого объекта.
+        form = UpdatePriceForm(request.POST)
+        if form.is_valid():
+            price = form.cleaned_data['price']
+            for product in products:
+                product.price = price
+                product.save()
+
+            # Перенаправляем на страницу списка объектов.
+            url = reverse('admin:update_price')
+            return HttpResponseRedirect(url)
+
+    else:
+        # Если форма не отправлена, показываем ее.
+        initial = {'price': products.first().price}
+        form = UpdatePriceForm(initial=initial)
+
+    context = {
+        'form': form,
+        'products': products,
+    }
+    return render(request, 'admin/update_price.html', context)
+
 def novaPost(request):
-    novapost = serializers.serialize('json', NovaPost.objects.all())
-    context = {"novaPost":novapost,}
+    novaPost = serializers.serialize('json', NovaPost.objects.all())
+    context = {"novaPost":novaPost,}
     return JsonResponse(context)
    
 

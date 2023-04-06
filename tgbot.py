@@ -1,9 +1,17 @@
+import os
+import django
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+os.environ.setdefault("DJANGO_SETTINGS_MODULE","pods.settings")
+django.setup()
+
 from aiogram import executor, Bot, Dispatcher, types
 from newpost import areas_centers_names, find_warehouse
 import requests
 import json
 import string
 import random
+from main.models import Offers
 
 token = "6075679825:AAGrgD6b9hybk9EoNue44k1ZPW8paFJCs5M"
 
@@ -162,9 +170,20 @@ async def payment(message:types.Message):
 async def spec(message:types.Message):
     
     try:
-        #print(message.from_user.username+": "+ message.text)
-        # await message.answer(text = message.web_app_data.data.join(", "))
-        await message.answer(text = message.web_app_data.data)
+        Offers.objects.all()
+        user_info = json.loads(message.web_app_data.data)
+        offer = Offers(
+            username = message.from_user.username,
+            offer = user_info['offer'],
+            amount = user_info['amount'],
+            name = user_info['name'],
+            phone_number = user_info['phone_number'],
+            area = user_info['area'],
+            city = user_info['city'],
+            warehouse = user_info['warehouse']
+                     )
+        offer.save()
+        await message.answer(text =json.loads(message.web_app_data.data)['message'])
     except:
         print("sosunok")
         #print(message.from_user.username+": "+ message.text)

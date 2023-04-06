@@ -10,40 +10,45 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from decimal import Decimal, InvalidOperation
 from django.template.response import TemplateResponse
-from django.contrib import messages
-from django.utils.translation import ngettext
-from collections import namedtuple
+from django.http import JsonResponse
 
-# class XmlImportForm(forms.Form):
-#     xml_upload = forms.FileField()
+class XmlImportForm(forms.Form):
+    xml_upload = forms.FileField()
 
 #start
+class PriceForm(forms.Form):
+    price = forms.CharField(max_length=255)
+
+class OffersAdmin(admin.ModelAdmin):
+    list_display = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse')
+    list_display_links = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse')
+    readonly_fields = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse' )
 
 
-
-# class PodikForm(forms.Form):
-#     new_price = forms.CharField(max_length=255)
 class PodikAdmin(admin.ModelAdmin):
     actions = ['update_price']
-
+    # def update_price(self, request, queryset):
+    #     # Перенаправляет на страницу обновления цены.
+    #     return HttpResponseRedirect(reverse('admin:update_price', args=[queryset.values_list('id', flat=True)]))
+    # update_price.short_description = 'Обновить цену'
     def update_price(self, request, queryset):
-        # Перенаправляет на страницу обновления цены.
-        return HttpResponseRedirect(reverse('admin:update_price', args=[queryset.values_list('id', flat=True)]))
-    update_price.short_description = 'Обновить цену'
+        form = PriceForm()
+        if request.method == 'POST':
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-        ActionDict = namedtuple('ActionDict', actions.get('update_price')._asdict().keys())
-        actions = ActionDict(*[ad._asdict() for ad in actions.values()])
-        update_price_dict = actions.update_price._asdict()
-        update_price_dict['form'] = {
-            'fields': [('new_price', admin.FloatField())],
-            'label': 'Обновить цену для выбранных объектов'
+            price = request.POST.get('price')
+            print(f"price = {price}")
+
+            if form.is_valid():
+                price = form.cleaned_data['price'], 
+                print(price)
+            else:
+                print("opiat 25")
+        context = {
+            'form': form
         }
-        actions = actions._replace(update_price=type(actions.update_price)(**update_price_dict))
-        return actions
-    
 
+        return render(request, 'admin/main/podik/change_list.html', context)
+    update_price.short_description = "Обновить цену на указанное значение"
     #end
 
 
@@ -60,7 +65,7 @@ class PodikAdmin(admin.ModelAdmin):
  
     def get_urls(self):
         urls = super().get_urls()
-        new_urls = [path('upload-xml/', self.upload_xml),]
+        new_urls = [path('upload-xml/', self.upload_xml), path('update-price/', self.update_price)]
         return new_urls + urls
     
     def upload_xml(self, request):
@@ -94,5 +99,6 @@ class PodikAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Podik, PodikAdmin)
+admin.site.register(Offers, OffersAdmin)
 admin.site.site_title = 'сторінка адміністрації'
 admin.site.site_header = 'Cторінка адміністрації'
