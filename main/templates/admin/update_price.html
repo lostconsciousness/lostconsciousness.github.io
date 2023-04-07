@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div>
+    <form action="." method="POST" id = "my-form">
+        {{ form.as_p }}
+      {% csrf_token %}
+        <input type="submit" method="POST" value="Сохранить" />
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+      $('#my-form').on('submit', function(event) {
+        event.preventDefault();  // Отменяем стандартное действие отправки формы
+        var form_data = $(this).serialize();  // Получаем данные формы
+        console.log(form_data)
+        $.ajax({
+          url: '/my_view/',  // URL для отправки данных
+          type: 'post',
+          data: form_data,  // Данные формы
+          success: function(response) {
+            // Обработка успешного ответа от сервера
+            console.log('response');
+            console.log(response);
+          },
+          error: function(response) {
+            // Обработка ошибок
+            console.log('err');
+          }
+        });
+      });
+    });
+    </script>
+{% endblock %}

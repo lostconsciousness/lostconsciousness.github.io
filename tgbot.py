@@ -183,6 +183,7 @@ async def spec(message:types.Message):
             warehouse = user_info['warehouse']
                      )
         offer.save()
+        print(offer.name)
         await message.answer(text =json.loads(message.web_app_data.data)['message'])
     except:
         print("sosunok")

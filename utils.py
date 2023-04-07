@@ -171,6 +171,10 @@ class DBManager:
                 compatibility_selection = compatibility_selection,
             )
             podik.save()
+            objlist = Podik.objects.using('sqlite').all()
+
+            for obj in objlist:
+                obj.save(using='mysql')
     def check(self):
         data = json.load(open("alldata.json", "r", encoding="UTF-8"))
         pods = data["yml_catalog"]["shop"][0]["offers"][0]["offer"]
@@ -214,5 +218,5 @@ class DBManager:
         
 dbm = DBManager()
 #dbm.check()
-#dbm.addToDB()
+dbm.addToDB()
 # dbm.addXmlToDB()
