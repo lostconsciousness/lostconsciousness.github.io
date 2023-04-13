@@ -50,6 +50,7 @@ class NovaPost(models.Model):
     city = models.CharField(max_length=255)
     ref = models.CharField(max_length=37, primary_key=True)
     warehouses = models.TextField()
+    mailboxes = models.TextField(null = True)
     area = models.CharField(max_length=255)
     isAreaCenter = models.BooleanField(default=False)
 
@@ -63,3 +64,4 @@ class Offers(models.Model):
     area = models.CharField(max_length=255, verbose_name="Область")
     city = models.CharField(max_length=255, verbose_name="Місто")
     warehouse = models.CharField(max_length=255, verbose_name="Пункт видачі")
+    products = models.TextField(null = True)

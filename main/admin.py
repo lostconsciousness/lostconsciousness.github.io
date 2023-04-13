@@ -11,6 +11,11 @@ from django.contrib import messages
 from decimal import Decimal, InvalidOperation
 from django.template.response import TemplateResponse
 from django.http import JsonResponse
+from localStoragePy import localStoragePy
+from .forms import UpdatePriceForm
+from django.db.models import QuerySet
+#localStorage = localStoragePy('general2286.pythonanywhere.com', 'db.sqlite3')
+
 
 class XmlImportForm(forms.Form):
     xml_upload = forms.FileField()
@@ -31,30 +36,25 @@ class PodikAdmin(admin.ModelAdmin):
     #     # Перенаправляет на страницу обновления цены.
     #     return HttpResponseRedirect(reverse('admin:update_price', args=[queryset.values_list('id', flat=True)]))
     # update_price.short_description = 'Обновить цену'
-    def update_price(self, request, queryset):
-        form = PriceForm()
-        if request.method == 'POST':
-
-            price = request.POST.get('price')
-            print(f"price = {price}")
-
-            if form.is_valid():
-                price = form.cleaned_data['price'], 
-                print(price)
-            else:
-                print("opiat 25")
-        context = {
-            'form': form
-        }
-
-        return render(request, 'admin/main/podik/change_list.html', context)
-    update_price.short_description = "Обновить цену на указанное значение"
+    def update_price(self, request, queryset: QuerySet):
+        # Перенаправляет на страницу обновления цены.
+        # return HttpResponseRedirect(reverse('update_price', args=[queryset.values_list('id', flat=True)])) 
+        form = UpdatePriceForm()
+        # print(list(queryset))
+        j=0
+        data_dict={}
+        for i in queryset:
+            data_dict[f"id{j}"]=i.id
+            j+=1
+        # print(data_dict)
+        return render(request, 'admin/update_price.html', {"my_data":data_dict, 'form': form})
+    update_price.short_description = "Оновити параметри"
     #end
 
 
     list_display = ('id','name','price', 'currencyId', 'available', 'param', 'get_html_photo')
     list_display_links = ('id','name','price', 'available', 'currencyId')
-    search_fields = ('id','name', 'price', 'param')
+    search_fields = ('id','name', 'price', 'param', 'picture')
     list_filter = ('available',)
     fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'url', 'picture', 'get_html_photo', 'flavour' , 'nicotine_strength', 'fluid_volume', 'battery_capacity', 'cartridge_capacity', 'resistance', 'power', 'atomizer_volume', 'max_power', 'puffs_number', 'rechargeable', 'compatibility_selection')
     readonly_fields = ('get_html_photo', )

@@ -30,6 +30,7 @@ urlpatterns = [
     path('novaPost/', novaPost, name="novaPost"),
     path('update_price/<str:ids>/', update_price, name = 'update_price'),
     path('my_view/', my_views, name = "my_view"),
+    path('update-price/', update_price, name='update_price'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

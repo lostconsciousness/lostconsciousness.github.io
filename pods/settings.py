@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'pods.urls'
@@ -83,16 +84,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'OPTIONS': {'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"},
-        'NAME': 'test',
+        'NAME': 'db',
         "USER": "admin",
         "PASSWORD": "Trnn06771588990",
-        "HOST": "database-1.ctng339lkkzz.eu-north-1.rds.amazonaws.com",
+        "HOST": "database-2.ctng339lkkzz.eu-north-1.rds.amazonaws.com",
         "PORT": "3306",
     }
 
     # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": BASE_DIR / "db.sqlite3",
+    # "ENGINE": "django.db.backends.sqlite3",
+    # "NAME": BASE_DIR / "db.sqlite3",
     # }
 
 }

@@ -83,7 +83,7 @@ def get_cities_and_add_to_db():
 
       response = requests.post(URL, json=params)
       result = response.json()
-
+      all_np_data = []
       if 'data' in result:
          if len(result['data']) == 0:
             break
@@ -94,21 +94,18 @@ def get_cities_and_add_to_db():
             warehouses = get_warehouses(city_['Ref'])
             if warehouses == '':
                continue
-            novapost = NovaPost(city=city_['Description'], ref=city_['Ref'], area=city_['AreaDescription'], warehouses=warehouses, isAreaCenter=(True if city_['Description'] in area_centers else False))
+            wh = warehouses[0] + ";"+ warehouses[1]
+            novapost = NovaPost(city=city_['Description'], ref=city_['Ref'], area=city_['AreaDescription'], warehouses=warehouses[0], mailboxes = warehouses[1], isAreaCenter=(True if city_['Description'] in area_centers else False))
+            #all_np_data.append(novapost)
             novapost.save()
-            city['name'] = city_['Description'].replace('`', '').replace("'", "").replace('\'', '').replace('"', '')
-            city['Ref'] = city_['Ref']
-            city['Area'] = city_['AreaDescription'].replace('`', '').replace("'", '').replace('\'', '').replace('"', '')
-            city['warehouses'] = warehouses.replace('`', '').replace("'", '').replace('\'', '').replace('"', '')
-            cities.append(city)
-            print(city)
+            print(city_['Description'])
       i+=1
-   return cities
+   #NovaPost.objects.bulk_create(all_np_data)
       
 
 def get_warehouses(ref):
    i = 1
-   warehouses = ''
+   warehouses = ['','']
    while True:
       params = {
       "apiKey": API_KEY,
@@ -121,15 +118,17 @@ def get_warehouses(ref):
       }
       response = requests.post(URL, json=params)
       result = response.json()
-
       if 'data' in result:
          if len(result['data']) == 0:
             break
          warehouses_ = result['data']
          for house in warehouses_:
             if 'Поштомат' not in house['Description']:
-               warehouses += house['Description'].replace('`', '').replace("'", '').replace('\'', '').replace('"', '') + ';'
-      i+=1
+               warehouses[0] += house['Description'].replace('`', '').replace("'", '').replace('\'', '').replace('"', '') + ';'
+            else:
+               warehouses[1] += house['Description'].replace('`', '').replace("'", '').replace('\'', '').replace('"', '') + ';'
+         i+=1
+   print(warehouses)
    return warehouses
 
 print(get_cities_and_add_to_db())

@@ -8,48 +8,63 @@ from .forms import UpdatePriceForm
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django_filters.views import FilterView
-
 from django.http import JsonResponse
+from django.contrib import messages
+from django.shortcuts import redirect
+#localStorage = localStoragePy('general2286.pythonanywhere.com', 'db.sqlite3')
+
 
 def my_views(request):
+
     if  request.method == 'POST':
         data = request.POST.get('price')
         print(f"data = {data}")
-
+        # items = localStorage.getItem("ids")
+        # for pod in Podik.objects.all():
+        #     if pod.id in items:
+        #         pod.price = data
         response_data = {'result': 'success'}
+        #localStorage.clear()
+        print(response_data)
         return JsonResponse(response_data)
     else:
         response_data = {'error': 'Invalid request'}
+        #localStorage.clear()
         return JsonResponse(response_data)
+    
 
-def update_price(request, ids):
-    # Получаем список выбранных объектов.
-    ids = [pk for pk in ids.split(',')]
-    products = Podik.objects.filter(pk__in=ids)
-
+def update_price(request):
     if request.method == 'POST':
-        # Если форма отправлена, обновляем цену для каждого объекта.
         form = UpdatePriceForm(request.POST)
         if form.is_valid():
-            price = form.cleaned_data['price']
-            for product in products:
-                product.price = price
-                product.save()
 
-            # Перенаправляем на страницу списка объектов.
-            url = reverse('admin:update_price')
-            return HttpResponseRedirect(url)
-
+            data = {}
+            for key in request.POST.keys():
+                if key.startswith('id'):
+                    data[key[2:]] = request.POST[key]
+            print(data.values())
+            temp = []
+            for i in data.values():
+                print(i)
+                temp.append(i)
+            new_price = request.POST.get('price')
+            new_quantity = request.POST.get('quantity_in_stock')
+            messages.success(request, f'Successfully updated {len(temp)} products')
+            print(f"new_price = {new_price}")
+            res = Podik.objects.filter(id__in=temp)
+            if(new_price != ""):
+                res.update(price=new_price)
+            if(new_quantity != ""):
+                res.update(quantity_in_stock=new_quantity)
+            return redirect(reverse('admin:index'))
     else:
-        # Если форма не отправлена, показываем ее.
-        initial = {'price': products.first().price}
-        form = UpdatePriceForm(initial=initial)
+        print("321")
+        selected_ids = request.GET.getlist('selected_ids')
+        products = Podik.objects.filter(id__in=selected_ids)
+        initial_price = products.first().price if products.exists() else 0
+        form = UpdatePriceForm(initial={'price': initial_price})
 
-    context = {
-        'form': form,
-        'products': products,
-    }
-    return render(request, 'admin/update_price.html', context)
+    return render(request, 'update_price.html', {'form': form})
 
 def novaPost(request):
     novaPost = serializers.serialize('json', NovaPost.objects.all())

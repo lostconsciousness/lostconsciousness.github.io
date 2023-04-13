@@ -12,12 +12,9 @@ import json
 import string
 import random
 from main.models import Offers
+from test import to_sales_drive
 
 token = "6075679825:AAGrgD6b9hybk9EoNue44k1ZPW8paFJCs5M"
-
-
-
-
 
 
 bot = Bot(token)
@@ -180,14 +177,17 @@ async def spec(message:types.Message):
             phone_number = user_info['phone_number'],
             area = user_info['area'],
             city = user_info['city'],
-            warehouse = user_info['warehouse']
+            warehouse = user_info['warehouse'],
+            products = user_info['products']
                      )
         offer.save()
+        to_sales_drive()
         print(offer.name)
+        
         await message.answer(text =json.loads(message.web_app_data.data)['message'])
     except:
         print("sosunok")
-        #print(message.from_user.username+": "+ message.text)
+        
 
 
 

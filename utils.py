@@ -9,12 +9,11 @@ from main.models import Podik
 import json
 from bs4 import BeautifulSoup
 from django.db import transaction
-
+import time
 
 class DBManager:
     def __str_to_bool(self,s):
         return s.lower() in ['true', '1', 't', 'y', 'yes']
-    @transaction.atomic
     def addToDB(self):
         data = json.load(open("alldata.json", "r", encoding="UTF-8"))
         Podik.objects.all().delete()
@@ -22,7 +21,13 @@ class DBManager:
         
         # print(pods[0]["$"])
         # print(self.__str_to_bool("false"))
+        j = 0
+        print(len(pods))
         for pod in pods:
+            j = j + 1
+            if j == 5383:
+                break
+            print(j)
             picture = '-'
             try:
                 picture=pod["picture"][0]
@@ -144,6 +149,7 @@ class DBManager:
                         compatibility_selection = parametr["_"]
             except:
                 compatibility_selection="-"
+            print(pod["name"][0])
             podik = Podik(
                 id = pod["$"]["id"],
                 available = self.__str_to_bool(pod["$"]["available"]),
@@ -171,10 +177,7 @@ class DBManager:
                 compatibility_selection = compatibility_selection,
             )
             podik.save()
-            objlist = Podik.objects.using('sqlite').all()
-
-            for obj in objlist:
-                obj.save(using='mysql')
+        exit()
     def check(self):
         data = json.load(open("alldata.json", "r", encoding="UTF-8"))
         pods = data["yml_catalog"]["shop"][0]["offers"][0]["offer"]
@@ -218,5 +221,8 @@ class DBManager:
         
 dbm = DBManager()
 #dbm.check()
-dbm.addToDB()
+# while(True):
+#     time.sleep(7200)
+#dbm.addToDB()
+
 # dbm.addXmlToDB()

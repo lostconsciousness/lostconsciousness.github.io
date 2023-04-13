@@ -380,14 +380,14 @@
             transform: scale(1);
           }
 
-          #cities, #towns, #warehouses{
+          #cities, #towns, #towns1, #mailboxes #warehouses{
             color: #333;
             padding: 0.7vh;
             border-style: none;
             border: 0;
             outline: none;
             background: none;
-            width: 90%;
+            width: 900px;
             font-size: 16px;
             border-color: #E1D7C6;
             border-left: solid 1px #E1D7C6;
@@ -544,7 +544,7 @@
     <div class="AddedToCart"></div>
        
         <div class ="filter"></div>
-    
+        <div id = "details" class='menu invisible'></div>
         
         <div class="grid" >
 
@@ -593,7 +593,9 @@
             
         </div>
     </div>
+    
     <button type = "submit" class = "btn_to_cart invisible" onclick = "to_cart({{novaPost}})"/>
+
 </body>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -612,6 +614,8 @@
     localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
 
     function to_filters(data,name, categId){
+        let details = document.querySelector('#details');
+        details.innerHTML = '';
         console.log("data" + data)
         console.log("name" + name)
         const content = document.querySelector('.grid') 
@@ -987,7 +991,7 @@
                         content.innerHTML += `<div class='catalog'>
                         <input type="text" value="0" data-item_id=${data.data[i].id} id="in_cart_${data.data[i].id}" class ="count invisible">
                         <div class='img_container'>
-                            <img src = ${data.data[i].picture} class='img_menu' alt=""/>
+                            <img crossorigin="anonymous" src = ${data.data[i].picture} class='img_menu' alt=""/>
                         </div>
                       
                         <div class='menutext' id = "name_${data.data[i].id}">${data.data[i].name}</div>
@@ -1241,6 +1245,8 @@
     }
 
     function to_catalog(data, name, filters = null, subdirectory=null) {
+        let details = document.querySelector('#details');
+        details.innerHTML = '';
         $(document).ready(function() {
             saveInfo();
             });
@@ -1430,6 +1436,9 @@
     }
     
     function to_menu(){
+        let details = document.querySelector('#details');
+        details.innerHTML = '';
+
         let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
         let tg = window.Telegram.WebApp
         tg.expand()
@@ -1497,7 +1506,6 @@
             </div>
             <div class="tovar_button" onclick = "to_filters({{pod}}, 'pod', '')"> Підібрати товар</div>
         </div>
-        <button id = "btn" value = "primenit"/>
         `
     }
     
@@ -1526,7 +1534,7 @@
                         container.innerHTML += `<div class='catalog'>
                             <input type="text" value="0" data-item_id=${data.offer[j].id} id="in_cart_${data.offer[j].id}" class ="count invisible">
                         <div class='img_container'> 
-                            <img src = ${data.offer[j].picture} class='img_menu' alt=""/>
+                            <img crossorigin="anonymous" src = ${data.offer[j].picture} class='img_menu' alt=""/>
                         </div>
                       
                         <div class='menutext' id = "name_${data.offer[j].id}">${data.offer[j].name}</div>
@@ -1574,7 +1582,7 @@
             <div class='catalog'>
                 <input type="text" value="0" data-item_id=${data[j].id} id="in_cart_${data[j].id}" class ="count invisible">
                 <div class='img_container'>
-                    <img src = ${data[j].picture} class='img_menu' alt=""/>
+                    <img crossorigin="anonymous" src = ${data[j].picture} class='img_menu' alt=""/>
                 </div>
               
                 <div class='menutext' id = "name_${data[j].id}">${data[j].name}</div>
@@ -1721,23 +1729,33 @@
     function cart_subtract(button,count){
         let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
         generalCart--;
+
         localStorage.setItem('generalCartCount',generalCart)
 
         let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
         let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
+
+        itemsNamesCountInCart.forEach(item => {
+            console.log(item.count)
+        })
+        
+
         let inCart = button.parentElement.querySelector('.counter__value');
         let name = button.parentElement.parentElement.parentElement.querySelector('.name_cart_card').innerHTML;
         console.log(name)
         let item = itemsNamesCountInCart.find(obj => obj.name == name)
         if(item){console.log('found')}
         item.count--;
+        
         if (item.count === 0){
             button.parentElement.parentElement.parentElement.classList = 'invisible';
         }
         inCart.setAttribute('value', item.count);
         itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
         localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
-
+        if(generalCart == 0){
+            to_menu()
+        }
     }
 
     function disappear(button){
@@ -1750,11 +1768,15 @@
 
         let generalCart = parseInt(localStorage.getItem('generalCartCount')) || 0;
         generalCart= generalCart - item.count;
+        
         item.count = 0;
         localStorage.setItem('generalCartCount',generalCart)
         itemsNamesCountInCartJson = JSON.stringify(itemsNamesCountInCart)
         localStorage.setItem('itemsNamesCountInCart', itemsNamesCountInCartJson);
-        button.parentElement.parentElement.classList = 'invisible';
+        button.parentElement.parentElement.classList = 'invisible'; 
+        if(generalCart == 0){
+            to_menu()
+        }
     }
 
     function to_cart(nvp){
@@ -1787,11 +1809,14 @@
                 let s = "";
                 let i = 0;
                 let cid = ""
+                let products = "";
                 itemsNamesCountInCart.forEach(item=>{
                     if(item.count != 0){
                         s=s+item.name+" - "+ item.count + " шт.\n";
                         i = i + parseInt(item.price)*parseInt(item.count);
-                        cid = item.currencyId
+                        cid = item.currencyId;
+
+                        products +=item.id + ":"+item.name +":"+item.price+":"+item.count+";";
                     }
             
                 })
@@ -1799,11 +1824,13 @@
                 let res = s + "\n На суму "+ i + cid + "\nНомер телефону: "+phone_number+"\nПІБ: "+ name + "\nОбласть: "+ areasSelect + "\nМісто "+ citiesSelect + "\nПункт видачі: "+ warehousesSelect;
                 let offer = s;
                 let price = i + " UAH";
-                let result = {'message': res, 'offer': offer, 'amount': price, 'phone_number': phone_number, 'name': name, 'area': areasSelect, 'city': citiesSelect, 'warehouse': warehousesSelect }
+
+                let result = {'message': res, 'offer': offer, 'amount': price, 'phone_number': phone_number, 'name': name, 'area': areasSelect, 'city': citiesSelect, 'warehouse': warehousesSelect, 'products' : products }
                 const resultJSON = JSON.stringify(result);
                 tg.sendData(resultJSON);
                 localStorage.clear();
             });
+
         })
         
         let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
@@ -1815,7 +1842,8 @@
         const btn_container = document.querySelector('#btn_container')
         const main_btn_container = document.querySelector('.btn_to_cart')
         const filter = document.querySelector('.filter') 
-
+        let details = document.querySelector('#details');
+        details.classList = 'visible'
         filter.innerHTML = '';
         //const nvp = {{novaPost}}
         main_btn_container.innerHTML = '';
@@ -1827,14 +1855,14 @@
         itemsNamesCountInCart.forEach(item => {
             if(item.count != 0){
 
-            
+            console.log(item)
             AddedToCart.innerHTML+=`
             <div class= "cart_card">
 
                 
 
                 <div class = "img_cart_card">
-                    <img src=${item.img_src} class="img_menu" alt>
+                    <img src=${item.picture} class="img_menu" alt>
                 </div>
 
                 
@@ -1881,7 +1909,7 @@
             </div> `
         }
         });
-        content.innerHTML+=`
+        details.innerHTML+=`
 
             <p class="contact_title">Реквізити для доставки</p>
 
@@ -1890,9 +1918,15 @@
 
                 <label for="phone_number" class="label_cart">Телефон*</label>
                 <input type="text" id="phone_number" class="input_cart" name="phone_number" placeholder="+380 000 0000">
+
+                <label for="delivery_method" class="label_cart">Оберіть спосіб доставки</label>
+                <select id="delivery_method" name="delivery_method" onchange = "get_post_office()"> 
+                    <option value="1">Курʼєром Нової пошти</option>
+                    <option value="2">У відділення</option>
+                    <option value="3">В поштомат</option>
+                </select>
          `
-        
-        $.ajax({
+         $.ajax({
             url: '{%url "novaPost"%}',
             type: 'GET',
             data: "",
@@ -1900,10 +1934,13 @@
             success: function (response){
                 const nvp1 = JSON.parse(response.novaPost)
                 const nvps = JSON.stringify(response.novaPost)
-                content.innerHTML+=`
+                let novapost = response.novaPost.replace(/'/g,"")
+                details.innerHTML+=`
+                <div class = 'invisible' id = "post_office">
                     <label for="cities" class="label_cart">Оберіть область</label>
                     
-                    <select id="cities" name="cities" onchange='get_cities(${response.novaPost.replace(/'/g,"")})'> <option value="---------">---------</option></select>`
+                    <select id="cities" name="cities" onchange='get_cities(${novapost})'> <option value="---------">---------</option></select>
+                </div>`
                 const select = document.querySelector('#cities')
                 console.log(nvp1.length)
                 nvp1.map(item => {
@@ -1916,50 +1953,87 @@
                 })
                 
                 
-                content.innerHTML+=`
+                details.innerHTML+=`
                 <div class="invisible" id = "towns_warehouses">
+                    <div class="invisible" id = "warehouseList">
                     <label for="towns" class="label_cart ">Оберіть місто</label>
     
-                    <select id="towns" name="towns"  onchange='get_warehouses(${response.novaPost.replace(/'/g,"")})' class=""><option value="---------">---------</option></select>
-                
-                    <label for="warehouses" class="label_cart "">Оберіть відділення</label>
+                    <select id="towns" name="towns"  onchange='get_warehouses(${novapost})' class=""><option value="---------">---------</option></select>
+                    
+                        <label for="warehouses" class="label_cart "">Оберіть відділення</label>
+        
+                        <select id="warehouses" name="warehouses " class="" ><option value="---------">---------</option></select> 
+                    </div>
+                    <div class="invisible" id = "mailboxList">
+                        <label for="towns1" class="label_cart ">Оберіть місто</label>
     
-                    <select id="warehouses" name="warehouses " class="" ><option value="---------">---------</option></select> 
+                        <select id="towns1" name="towns1"  onchange='get_mailboxes(${novapost})' class=""><option value="---------">---------</option></select>
+    
+                        <label for="mailbox" class="label_cart "">Оберіть поштомат</label>
+        
+                        <select id="mailboxes" name="mailbox" class=""><option value="---------">---------</option></select> 
+                    </div>
                 </div>
         
                     
-        
-                ` 
-                content.innerHTML+=`
+                
+                `
+
+                details.innerHTML+=`
                 
                 <label for="comment" class="label_cart">Коментар</label>
         
                 <textarea id="comment" name="comment" rows="3" cols="33" class="input_comment" placeholder ="It was a dark and stormy night...">  </textarea>
                 
                 <div style= "width:100%; height:150px"></div>`
-
+                $('#cities').select2();
             },
             error: function(err){
                 console.log(err);
             }
         })
 
-       
+        
+
         
 
     }
 
+
+function get_post_office(){
+    console.log('sdjf')
+    if(delivery_method.value === "2"){
+    document.querySelector('#post_office').classList = "visible";
+    document.querySelector('#warehouseList').classList = "visible";
+    document.querySelector('#mailboxList').classList = "invisible";
+}
+    else if(delivery_method.value === "3"){
+        document.querySelector('#post_office').classList = "visible";
+    document.querySelector('#warehouseList').classList = "invisible";
+    document.querySelector('#mailboxList').classList = "visible";
+}
+    else{
+        document.querySelector('#post_office').classList = "visible";
+        document.querySelector('#warehouseList').classList = "invisible";
+        document.querySelector('#mailboxList').classList = "invisible";
+    }
+}
+
     function get_cities(nvp){
         const select = document.querySelector('#cities');
         const town_select = document.querySelector('#towns')
+        const town_select1 = document.querySelector('#towns1')
         town_select.innerHTML=''
+        town_select1.innerHTML=''
         let area = select.value;
-       
+        $('#towns').select2();
+        $('#towns1').select2();
         for (i = 0; i < nvp.length; i++)
         {
             
             if (nvp[i]['fields']['area'] == area){
                 town_select.innerHTML +=`<option value="${nvp[i]['fields']['city']}">${nvp[i]['fields']['city']}</option>`
+                town_select1.innerHTML +=`<option value="${nvp[i]['fields']['city']}">${nvp[i]['fields']['city']}</option>`
             }
         }   
 
@@ -1980,6 +2054,8 @@
     function get_warehouses(nvp){
         const town_select = document.querySelector('#towns')
         const warehouses_select = document.querySelector('#warehouses')
+        $('#warehouses').select2();
+        $('#warehouses').classList = 'visible'
         warehouses_select.innerHTML=''
         for (j = 0; j < nvp.length; j++){
             if (nvp[j]['fields']['city'] == town_select.value){
@@ -1988,6 +2064,28 @@
                 for (i = 0; i < warehouses.length-1; i++)
                 {
                     warehouses_select.innerHTML +=`<option value="${warehouses[i]}">${warehouses[i]}</option>`
+                }   
+                break;
+            }
+                
+        }
+        
+    }
+    function get_mailboxes(nvp){
+        const town_select = document.querySelector('#towns1')
+        const mailboxes_select = document.querySelector('#mailboxes')
+        $('#mailboxes').select2();
+        mailboxes_select.innerHTML=''
+        for (j = 0; j < nvp.length; j++){
+            if (nvp[j]['fields']['city'] == town_select.value){
+                mailboxes = nvp[j]['fields']['mailboxes'].split(';')
+                console.log(mailboxes)
+                for (i = 0; i < mailboxes.length; i++)
+                {
+                    const option = document.createElement('option');
+                    option.textContent = mailboxes[i];
+                    option.value = mailboxes[i];
+                    mailboxes_select.appendChild(option);
                 }   
                 break;
             }
