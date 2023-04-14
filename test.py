@@ -28,6 +28,16 @@ def to_sales_drive():
             "fName": offer.name.split(' ')[1],
             "lName": offer.name.split(' ')[0],
             "phone": offer.phone_number,
+            "payment_method": offer.payment_method,
+            "shipping_method": offer.delivery_method,
+            "shipping_address": offer.warehouse,
+            "comment": offer.comment,
+            "sajt": "Bot",
+            # "novaposhta":{
+            #     "area": offer.area,
+            #     "city": offer.city,
+            #     "WarehouseNumber": offer.warehouse,
+            # }
             })
     else:
         response = requests.post('https://general2286.salesdrive.me/handler/', json={
@@ -36,6 +46,16 @@ def to_sales_drive():
             "products": products,
             "fName": offer.name,
             "phone": offer.phone_number,
+            "payment_method": offer.payment_method,
+            "shipping_method": offer.delivery_method,
+            "shipping_address": offer.warehouse,
+            "comment": offer.comment,
+            "sajt": "Bot",
+            # "novaposhta":{
+            #     "area": offer.area,
+            #     "city": offer.city,
+            #     "WarehouseNumber": offer.warehouse,
+            # }
             })
     print(response.text)
 

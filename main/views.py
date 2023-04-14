@@ -49,6 +49,7 @@ def update_price(request):
                 temp.append(i)
             new_price = request.POST.get('price')
             new_quantity = request.POST.get('quantity_in_stock')
+            new_available = request.POST.get('available')
             messages.success(request, f'Successfully updated {len(temp)} products')
             print(f"new_price = {new_price}")
             res = Podik.objects.filter(id__in=temp)
@@ -56,6 +57,7 @@ def update_price(request):
                 res.update(price=new_price)
             if(new_quantity != ""):
                 res.update(quantity_in_stock=new_quantity)
+            res.update(available = new_available)
             return redirect(reverse('admin:index'))
     else:
         print("321")
@@ -71,6 +73,10 @@ def novaPost(request):
     context = {"novaPost":novaPost,}
     return JsonResponse(context)
    
+def novaPosttest(request):
+    novaPost = serializers.serialize('json', NovaPost.objects.all())
+    context = {"novapost":novaPost,}
+    return render(request, "main/homepage.html", context)
 
 def filter_data(request):
     filtered_data = Podik.objects.all()
@@ -146,7 +152,7 @@ def load_more(request):
 def homepage(request):
     podfilter = PodFilter(request.GET, queryset=Podik.objects.all())
 
-
+    novaPost = serializers.serialize('json', NovaPost.objects.all())
     allObjects = Podik.objects.all()
     pods = serializers.serialize('json', podfilter.qs[:50])
     pod_system = serializers.serialize('json', allObjects.filter(categoryId = 220)[:50])
@@ -171,7 +177,7 @@ def homepage(request):
         "hqd":hqd,
         "ukrainian_salt":ukrainian_salt,
         "premium_salt":premium_salt,
-
+        "novapost":novaPost,
     }
     return render(request, 'main/homepage.html', context)
 

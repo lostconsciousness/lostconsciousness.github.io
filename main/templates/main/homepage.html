@@ -335,6 +335,15 @@
         label{
             display: flex;
         }
+
+        .label_phone{
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 19px;
+            color: black;
+            margin: 1vh 0 4px 0;
+        }
+
         .label_cart{
             font-weight: 400;
             font-size: 12px;
@@ -342,6 +351,7 @@
             color: black;
             margin: 1vh 0 4px 0;
         }
+
         #id_nicotine_strength,#id_max_power, #id_puffs_number, #id_atomizer_volume, #id_power, #id_battery_capacity, #id_fluid_volume,#id_resistance{
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -387,7 +397,8 @@
             border: 0;
             outline: none;
             background: none;
-            width: 900px;
+            width: 90vw;
+            display: block;
             font-size: 16px;
             border-color: #E1D7C6;
             border-left: solid 1px #E1D7C6;
@@ -528,6 +539,23 @@
         }
 
 
+        #details{
+            margin-left: 3vh;
+        }
+        .delivery_method,.payment_method{
+            color: #333;
+            padding: 0.7vh;
+            border-style: none;
+            border: 0;
+            outline: none;
+            background: none;
+            display: block;
+            font-size: 16px;
+            border-color: #E1D7C6;
+            border-left: solid 1px #E1D7C6;
+            border-right: solid 1px #E1D7C6;
+            border-top: solid 1px #E1D7C6;
+        }
 
 
     </style>
@@ -594,10 +622,10 @@
         </div>
     </div>
     
-    <button type = "submit" class = "btn_to_cart invisible" onclick = "to_cart({{novaPost}})"/>
+    <button type = "submit" class = "btn_to_cart invisible" onclick = "to_cart({{novapost}})"/>
 
 </body>
-
+<script src="https://unpkg.com/imask"></script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
@@ -630,7 +658,7 @@
         header.innerHTML = `
         <div class="back_to_menu" onclick = "to_menu()"> 
             <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
-            <div onclick = "to_cart({{novaPost}})">
+            <div onclick = "to_cart({{novapost}})">
                 <img src="{% static "images/cart.png" %}" class ="cart"; >
                 <div class ="count_cart invisible" id="in_cart">${0}</div>
             </div>
@@ -1278,7 +1306,7 @@
                 <img src="{% static "images/filter.png" %}"; class="filter_img" >
             </div>
 
-         <div onclick = "to_cart({{novaPost}})">
+         <div onclick = "to_cart({{novapost}})">
             <img src="{% static "images/cart.png" %}" class ="cart"; >
             <div class ="count_cart invisible" id="in_cart">${0}</div>
            
@@ -1666,7 +1694,7 @@
         const AddedToCart = document.querySelector('.AddedToCart')
         AddedToCart.innerHTML ='';
 
-        main_button.innerHTML =`<button type="submit" class="btn_to_cart visible" onclick= "to_cart({{novaPost}})">Переглянути замовлення (${generalCart})</button>`
+        main_button.innerHTML =`<button type="submit" class="btn_to_cart visible" onclick= "to_cart({{novapost}})">Переглянути замовлення (${generalCart})</button>`
         header.innerHTML = `
         <div class="back_to_menu" onclick = "to_menu()" > 
             <img src="{% static "images/left-arrow.png" %}" class ="arrow"; alt="" />  До каталогу</div>
@@ -1798,14 +1826,34 @@
             })
             
             tg.onEvent("mainButtonClicked", function (){
+                try{
                 let itemsNamesCountInCartJson = localStorage.getItem('itemsNamesCountInCart')
                 let itemsNamesCountInCart = JSON.parse(itemsNamesCountInCartJson);
                 let phone_number = document.getElementById('phone_number').value
                 let nameInput = document.getElementById('name')
-                let name = nameInput.value
-                const warehousesSelect = document.getElementById('warehouses').value;
+                let name = nameInput.value;
+                
                 const areasSelect = document.getElementById('cities').value;
                 const citiesSelect = document.getElementById('towns').value;
+                const delivery_method = document.getElementById('delivery_method').value;
+                const payment_method = document.getElementById('payment_method').value;
+                const comment = document.getElementById('comment').value;
+                const whether_call = document.getElementById('feedback-cart').checked;
+
+                if(whether_call){
+                    phone_number = "Не телефонувати("+phone_number+")"
+                }
+
+                let warehousesSelect = "";
+                if (delivery_method === "У відділення"){
+                     warehousesSelect = document.getElementById('warehouses').value;
+                }
+                else if(delivery_method === "В поштомат"){
+                     warehousesSelect = document.getElementById('mailboxes').value;
+                }
+                else{
+                     warehousesSelect = document.getElementById('adress').value;
+                }
                 let s = "";
                 let i = 0;
                 let cid = ""
@@ -1821,14 +1869,18 @@
             
                 })
                 
-                let res = s + "\n На суму "+ i + cid + "\nНомер телефону: "+phone_number+"\nПІБ: "+ name + "\nОбласть: "+ areasSelect + "\nМісто "+ citiesSelect + "\nПункт видачі: "+ warehousesSelect;
+                let res = s + "\n На суму "+ i + cid + "\nНомер телефону: "+phone_number+"\nПІБ: "+ name + "\nОбласть: "+ areasSelect + "\nМісто "+ citiesSelect + "\nСпосіб доставки: "+delivery_method+"\nСпосіб оплати: "+payment_method+"\nПункт видачі: "+ warehousesSelect+"\nКоментар: "+ comment;
                 let offer = s;
                 let price = i + " UAH";
 
-                let result = {'message': res, 'offer': offer, 'amount': price, 'phone_number': phone_number, 'name': name, 'area': areasSelect, 'city': citiesSelect, 'warehouse': warehousesSelect, 'products' : products }
+                let result = {'message': res, 'offer': offer, 'amount': price, 'phone_number': phone_number, 'name': name, 'area': areasSelect, 'city': citiesSelect, 'warehouse': warehousesSelect, 'products' : products, 'delivery_method': delivery_method, 'payment_method': payment_method, 'comment': comment }
                 const resultJSON = JSON.stringify(result);
                 tg.sendData(resultJSON);
                 localStorage.clear();
+            }
+            catch(e){
+                alert(e);
+            }
             });
 
         })
@@ -1918,38 +1970,43 @@
 
                 <label for="phone_number" class="label_cart">Телефон*</label>
                 <input type="text" id="phone_number" class="input_cart" name="phone_number" placeholder="+380 000 0000">
+                <label for="phone_number" class="label_phone">Не телефонувати 
+                    <input type="checkbox" id="feedback-cart">
+                </label>
 
+                <label for="payment_method" class="label_cart">Оберіть спосіб оплати</label>
+                <select id="payment_method" name="payment_method" class = "payment_method" > 
+                    <option value="При отриманні">При отриманні </option>
+                    <option value="Карткою онлайн">Карткою онлайн</option>
+                    
+                </select>
+                
                 <label for="delivery_method" class="label_cart">Оберіть спосіб доставки</label>
-                <select id="delivery_method" name="delivery_method" onchange = "get_post_office()"> 
-                    <option value="1">Курʼєром Нової пошти</option>
-                    <option value="2">У відділення</option>
-                    <option value="3">В поштомат</option>
+                <select id="delivery_method" name="delivery_method" class = "delivery_method" onchange = "get_post_office()"> 
+                    <option value="Курʼєром Нової пошти">Курʼєром Нової пошти</option>
+                    <option value="У відділення">У відділення</option>
+                    <option value="В поштомат">В поштомат</option>
                 </select>
          `
-         $.ajax({
-            url: '{%url "novaPost"%}',
-            type: 'GET',
-            data: "",
-            beforeSend: function(){},
-            success: function (response){
-                const nvp1 = JSON.parse(response.novaPost)
-                const nvps = JSON.stringify(response.novaPost)
-                let novapost = response.novaPost.replace(/'/g,"")
+
+
+         console.log("start")
+
                 details.innerHTML+=`
                 <div class = 'invisible' id = "post_office">
                     <label for="cities" class="label_cart">Оберіть область</label>
-                    
-                    <select id="cities" name="cities" onchange='get_cities(${novapost})'> <option value="---------">---------</option></select>
+                    <select id="cities" name="cities" onchange='get_cities({{novapost}})'> 
+                        <option value="---------">---------</option>
+                    </select>
                 </div>`
                 const select = document.querySelector('#cities')
-                console.log(nvp1.length)
-                nvp1.map(item => {
-                    
-                        if (item.fields.isAreaCenter){
-                            select.innerHTML +=`<option value="${item.fields.area}">${item.fields.area}</option>`
-                        }
-                    
-                    
+                console.log(nvp.length)
+                const options = nvp.filter(item => item.fields.isAreaCenter).map(item => {
+                            //select.innerHTML +=`<option value="${item.fields.area}">${item.fields.area}</option>`
+                            const option = document.createElement('option');
+                            option.textContent = item.fields.area;
+                            option.value = item.fields.area;
+                            select.appendChild(option);       
                 })
                 
                 
@@ -1958,7 +2015,7 @@
                     <div class="invisible" id = "warehouseList">
                     <label for="towns" class="label_cart ">Оберіть місто</label>
     
-                    <select id="towns" name="towns"  onchange='get_warehouses(${novapost})' class=""><option value="---------">---------</option></select>
+                    <select id="towns" name="towns"  onchange='get_warehouses({{novapost}})' class=""><option value="---------">---------</option></select>
                     
                         <label for="warehouses" class="label_cart "">Оберіть відділення</label>
         
@@ -1967,7 +2024,7 @@
                     <div class="invisible" id = "mailboxList">
                         <label for="towns1" class="label_cart ">Оберіть місто</label>
     
-                        <select id="towns1" name="towns1"  onchange='get_mailboxes(${novapost})' class=""><option value="---------">---------</option></select>
+                        <select id="towns1" name="towns1"  onchange='get_mailboxes({{novapost}})' class=""><option value="---------">---------</option></select>
     
                         <label for="mailbox" class="label_cart "">Оберіть поштомат</label>
         
@@ -1980,44 +2037,55 @@
                 `
 
                 details.innerHTML+=`
-                
+
+                <div class="adress visible">
+
+                    <label for="adress" class="label_cart">Адреса для доставки</label>
+            
+                    <textarea id="adress" name="adress" rows="2" cols="33" class="input_comment" placeholder ="">  </textarea>
+                    
+                </div>
+
                 <label for="comment" class="label_cart">Коментар</label>
         
-                <textarea id="comment" name="comment" rows="3" cols="33" class="input_comment" placeholder ="It was a dark and stormy night...">  </textarea>
+                <textarea id="comment" name="comment" rows="3" cols="33" class="input_comment" placeholder ="">  </textarea>
                 
                 <div style= "width:100%; height:150px"></div>`
+                console.log("end")
                 $('#cities').select2();
-            },
-            error: function(err){
-                console.log(err);
-            }
-        })
-
-        
-
-        
-
+                $('#warehouses').select2();
+                $('#mailboxes').select2();
+                var element = document.getElementById('phone_number');
+                var maskOptions = {
+                    mask: '+38(000)000-00-00',
+                    lazy: false
+                } 
+                var mask = new IMask(element, maskOptions);
+                document.querySelectorAll('.select2 ').removeAttribute("style");
     }
 
 
-function get_post_office(){
-    console.log('sdjf')
-    if(delivery_method.value === "2"){
-    document.querySelector('#post_office').classList = "visible";
-    document.querySelector('#warehouseList').classList = "visible";
-    document.querySelector('#mailboxList').classList = "invisible";
-}
-    else if(delivery_method.value === "3"){
+    function get_post_office(){
+        console.log('sdjf')
+        if(delivery_method.value === "У відділення"){
         document.querySelector('#post_office').classList = "visible";
-    document.querySelector('#warehouseList').classList = "invisible";
-    document.querySelector('#mailboxList').classList = "visible";
-}
-    else{
+        document.querySelector('#warehouseList').classList = "visible";
+        document.querySelector('#mailboxList').classList = "invisible";
+        document.querySelector('.adress').classList = "adress invisible"
+    }
+        else if(delivery_method.value === "В поштомат"){
         document.querySelector('#post_office').classList = "visible";
         document.querySelector('#warehouseList').classList = "invisible";
-        document.querySelector('#mailboxList').classList = "invisible";
+        document.querySelector('#mailboxList').classList = "visible";
+        document.querySelector('.adress').classList = "adress invisible"
     }
-}
+        else{
+            document.querySelector('.adress').classList = "adress visible"
+            document.querySelector('#post_office').classList = "invisible";
+            document.querySelector('#warehouseList').classList = "invisible";
+            document.querySelector('#mailboxList').classList = "invisible";
+        }
+    }
 
     function get_cities(nvp){
         const select = document.querySelector('#cities');
@@ -2032,8 +2100,14 @@ function get_post_office(){
         {
             
             if (nvp[i]['fields']['area'] == area){
-                town_select.innerHTML +=`<option value="${nvp[i]['fields']['city']}">${nvp[i]['fields']['city']}</option>`
-                town_select1.innerHTML +=`<option value="${nvp[i]['fields']['city']}">${nvp[i]['fields']['city']}</option>`
+                const option = document.createElement('option');
+                option.textContent = nvp[i]['fields']['city'];
+                option.value = nvp[i]['fields']['city'];
+                const option1 = document.createElement('option');
+                option1.textContent = nvp[i]['fields']['city'];
+                option1.value = nvp[i]['fields']['city'];
+                town_select.appendChild(option);
+                town_select1.appendChild(option1);
             }
         }   
 
@@ -2054,7 +2128,7 @@ function get_post_office(){
     function get_warehouses(nvp){
         const town_select = document.querySelector('#towns')
         const warehouses_select = document.querySelector('#warehouses')
-        $('#warehouses').select2();
+        //$('#warehouses').select2();
         $('#warehouses').classList = 'visible'
         warehouses_select.innerHTML=''
         for (j = 0; j < nvp.length; j++){
@@ -2063,18 +2137,22 @@ function get_post_office(){
                 console.log(warehouses)
                 for (i = 0; i < warehouses.length-1; i++)
                 {
-                    warehouses_select.innerHTML +=`<option value="${warehouses[i]}">${warehouses[i]}</option>`
+                    const option = document.createElement('option');
+                    option.textContent = warehouses[i];
+                    option.value = warehouses[i];
+                    warehouses_select.appendChild(option);
                 }   
                 break;
             }
                 
         }
+        document.querySelectorAll('.select2 ').removeAttribute("style");
         
     }
     function get_mailboxes(nvp){
         const town_select = document.querySelector('#towns1')
         const mailboxes_select = document.querySelector('#mailboxes')
-        $('#mailboxes').select2();
+        //$('#mailboxes').select2();
         mailboxes_select.innerHTML=''
         for (j = 0; j < nvp.length; j++){
             if (nvp[j]['fields']['city'] == town_select.value){
@@ -2091,7 +2169,7 @@ function get_post_office(){
             }
                 
         }
-        
+        document.querySelectorAll('.select2 ').setAttribute("style", "100%");
     }
 </script>
 

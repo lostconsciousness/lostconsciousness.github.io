@@ -1,35 +1,69 @@
-<offers>
-<offer id="-----------------" available="false">
-<price>199</price>
-<currencyId>UAH4324324324</currencyId>
-<name>QEWRTTTTTTUIUIII</name>
-<categoryId>282</categoryId>
-<vendorCode>71317</vendorCode>
-<quantity_in_stock>999999999999999</quantity_in_stock>
-<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
-<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
-<param name="Выбор цвета">Grey</param>
-</offer>
-<offer id="2---5------------" available="false">
-<price>199</price>
-<currencyId>UAH4324</currencyId>
-<name>QEWRTTTTTTUIUIII</name>
-<categoryId>282</categoryId>
-<vendorCode>71317</vendorCode>
-<quantity_in_stock>999999999999999</quantity_in_stock>
-<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
-<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
-<param name="Выбор цвета">Grey</param>
-</offer>
-<offer id="1----------------" available="false">
-<price>199</price>
-<currencyId>UAH67879789</currencyId>
-<name>QEWRTTTTTTUIUIII</name>
-<categoryId>282</categoryId>
-<vendorCode>71317</vendorCode>
-<quantity_in_stock>999999999999999</quantity_in_stock>
-<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
-<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
-<param name="Выбор цвета">Grey</param>
-</offer>
+<offers>
+
+<offer id="-----------------" available="false">
+
+<price>199</price>
+
+<currencyId>UAH4324324324</currencyId>
+
+<name>QEWRTTTTTTUIUIII</name>
+
+<categoryId>282</categoryId>
+
+<vendorCode>71317</vendorCode>
+
+<quantity_in_stock>999999</quantity_in_stock>
+
+<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
+
+<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
+
+<param name="Выбор цвета">Grey</param>
+
+</offer>
+
+<offer id="2---5------------" available="false">
+
+<price>199</price>
+
+<currencyId>UAH4324</currencyId>
+
+<name>QEWRTTTTTTUIUIII</name>
+
+<categoryId>282</categoryId>
+
+<vendorCode>71317</vendorCode>
+
+<quantity_in_stock>999999999</quantity_in_stock>
+
+<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
+
+<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
+
+<param name="Выбор цвета">Grey</param>
+
+</offer>
+
+<offer id="1----------------" available="false">
+
+<price>199</price>
+
+<currencyId>UAH67879789</currencyId>
+
+<name>QEWRTTTTTTUIUIII</name>
+
+<categoryId>282</categoryId>
+
+<vendorCode>71317</vendorCode>
+
+<quantity_in_stock>99999999</quantity_in_stock>
+
+<url>http://uvape.pro/index.php?route=product/product&product_id=2521</url>
+
+<picture>http://uvape.pro/image//catalog/iqos/clip_gold_1000x840_2jhd-nl.png</picture>
+
+<param name="Выбор цвета">Grey</param>
+
+</offer>
+
 </offers>

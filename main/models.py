@@ -64,4 +64,18 @@ class Offers(models.Model):
     area = models.CharField(max_length=255, verbose_name="Область")
     city = models.CharField(max_length=255, verbose_name="Місто")
     warehouse = models.CharField(max_length=255, verbose_name="Пункт видачі")
+    delivery_method = models.CharField(max_length=255,null=True, verbose_name="Спосіб доставки")
+    payment_method = models.CharField(max_length=255,null=True, verbose_name="Спосіб оплати")
+    comment = models.TextField(null=True, verbose_name="Коментар")
     products = models.TextField(null = True)
+    class Meta:
+        verbose_name = "Замовлення"
+        verbose_name_plural = "Замовлення"
+
+class Users(models.Model):
+    username = models.CharField(max_length=255, verbose_name="Ім'я користувача")
+    phone_number = models.CharField(max_length=255, verbose_name="Номер телефону")
+    name = models.CharField(max_length=255, verbose_name="Ім'я")
+    class Meta:
+        verbose_name = "Користувач"
+        verbose_name_plural = "Користувачі"

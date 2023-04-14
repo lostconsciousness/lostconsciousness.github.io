@@ -11,7 +11,7 @@ import requests
 import json
 import string
 import random
-from main.models import Offers
+from main.models import Offers, Users
 from test import to_sales_drive
 
 token = "6075679825:AAGrgD6b9hybk9EoNue44k1ZPW8paFJCs5M"
@@ -56,6 +56,15 @@ async def start_fun(message: types.Message):
 
 @dp.message_handler(content_types=types.ContentType.CONTACT)
 async def qq(message:types.Message):
+    Users.objects.all()
+    existing_user = Users.objects.filter(username=message.from_user.username).first()
+    if not existing_user:
+        user = Users(
+            username=message.from_user.username,
+            phone_number=message.contact.phone_number,
+            name=message.from_user.first_name
+        )
+        user.save()
     print(message.from_user.username+": "+ message.contact.phone_number)
     keyboard = types.ReplyKeyboardMarkup(
         keyboard=[
@@ -178,12 +187,15 @@ async def spec(message:types.Message):
             area = user_info['area'],
             city = user_info['city'],
             warehouse = user_info['warehouse'],
-            products = user_info['products']
+            products = user_info['products'],
+            delivery_method = user_info['delivery_method'],
+            comment = user_info['comment'],
+            payment_method = user_info['payment_method'],
                      )
         offer.save()
         to_sales_drive()
         print(offer.name)
-        
+
         await message.answer(text =json.loads(message.web_app_data.data)['message'])
     except:
         print("sosunok")

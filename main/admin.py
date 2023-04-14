@@ -25,9 +25,14 @@ class PriceForm(forms.Form):
     price = forms.CharField(max_length=255)
 
 class OffersAdmin(admin.ModelAdmin):
-    list_display = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse')
-    list_display_links = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse')
-    readonly_fields = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse' )
+    list_display = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
+    list_display_links = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
+    readonly_fields = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse', 'products', 'comment', 'payment_method', 'delivery_method')
+
+class UsersAdmin(admin.ModelAdmin):
+    list_display = ('username','phone_number', 'name')
+    list_display_links = ('username','phone_number', 'name')
+    readonly_fields = ('username','phone_number', 'name')
 
 
 class PodikAdmin(admin.ModelAdmin):
@@ -52,8 +57,8 @@ class PodikAdmin(admin.ModelAdmin):
     #end
 
 
-    list_display = ('id','name','price', 'currencyId', 'available', 'param', 'get_html_photo')
-    list_display_links = ('id','name','price', 'available', 'currencyId')
+    list_display = ('id','name','price', 'currencyId', 'available', 'quantity_in_stock','param',  'get_html_photo')
+    list_display_links = ('id','name','price', 'available', 'quantity_in_stock','currencyId')
     search_fields = ('id','name', 'price', 'param', 'picture')
     list_filter = ('available',)
     fields = ('name', 'id', 'available', 'price', 'currencyId', 'categoryId', 'vendorCode', 'quantity_in_stock', 'url', 'picture', 'get_html_photo', 'flavour' , 'nicotine_strength', 'fluid_volume', 'battery_capacity', 'cartridge_capacity', 'resistance', 'power', 'atomizer_volume', 'max_power', 'puffs_number', 'rechargeable', 'compatibility_selection')
@@ -100,5 +105,6 @@ class PodikAdmin(admin.ModelAdmin):
 
 admin.site.register(Podik, PodikAdmin)
 admin.site.register(Offers, OffersAdmin)
+admin.site.register(Users, UsersAdmin)
 admin.site.site_title = 'сторінка адміністрації'
 admin.site.site_header = 'Cторінка адміністрації'
