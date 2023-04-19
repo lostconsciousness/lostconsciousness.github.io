@@ -17,7 +17,7 @@ def to_sales_drive():
         print(product)
         if product.split(":")[0] != "":
             products.append(
-                {"id": product.split(":")[0], "name": product.split(":")[1], "costPerItem": product.split(":")[2], "amount" : product.split(":")[3]},
+                {"id": product.split(":")[0], "name": product.split(":")[1], "costPerItem": product.split(":")[2], "amount" : product.split(":")[3], "discount": 133},
                 )
     print(products)
     if len(offer.name.split(' '))>1:
@@ -33,11 +33,11 @@ def to_sales_drive():
             "shipping_address": offer.warehouse,
             "comment": offer.comment,
             "sajt": "Bot",
-            # "novaposhta":{
-            #     "area": offer.area,
-            #     "city": offer.city,
-            #     "WarehouseNumber": offer.warehouse,
-            # }
+            "novaposhta":{
+                "area": offer.area,
+                "city": offer.city,
+                "WarehouseNumber": offer.warehouse,
+            }
             })
     else:
         response = requests.post('https://general2286.salesdrive.me/handler/', json={
@@ -51,11 +51,11 @@ def to_sales_drive():
             "shipping_address": offer.warehouse,
             "comment": offer.comment,
             "sajt": "Bot",
-            # "novaposhta":{
-            #     "area": offer.area,
-            #     "city": offer.city,
-            #     "WarehouseNumber": offer.warehouse,
-            # }
+            "novaposhta":{
+                "area": offer.area,
+                "city": offer.city,
+                "WarehouseNumber": offer.warehouse,
+            }
             })
     print(response.text)
 

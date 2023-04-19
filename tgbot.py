@@ -176,6 +176,9 @@ async def payment(message:types.Message):
 async def spec(message:types.Message):
     
     try:
+        j = ""
+        with open('txt.txt', 'r', encoding ='utf-8') as f:
+            j = f.readline()
         Offers.objects.all()
         user_info = json.loads(message.web_app_data.data)
         offer = Offers(
@@ -191,8 +194,12 @@ async def spec(message:types.Message):
             delivery_method = user_info['delivery_method'],
             comment = user_info['comment'],
             payment_method = user_info['payment_method'],
+            offer_id = j
                      )
         offer.save()
+        j= int(j)+1
+        with open('txt.txt', 'w') as f:
+            f.write(str(j))
         to_sales_drive()
         print(offer.name)
 

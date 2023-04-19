@@ -25,9 +25,9 @@ class PriceForm(forms.Form):
     price = forms.CharField(max_length=255)
 
 class OffersAdmin(admin.ModelAdmin):
-    list_display = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
-    list_display_links = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
-    readonly_fields = ('username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse', 'products', 'comment', 'payment_method', 'delivery_method')
+    list_display = ('offer_id','username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
+    list_display_links = ('offer_id','username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse','payment_method', 'delivery_method', 'comment')
+    readonly_fields = ('offer_id','username','phone_number', 'name','offer', 'amount', 'area', 'city', 'warehouse', 'products', 'comment', 'payment_method', 'delivery_method')
 
 class UsersAdmin(admin.ModelAdmin):
     list_display = ('username','phone_number', 'name')

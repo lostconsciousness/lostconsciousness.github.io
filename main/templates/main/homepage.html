@@ -556,7 +556,10 @@
             border-right: solid 1px #E1D7C6;
             border-top: solid 1px #E1D7C6;
         }
-
+        .cash{
+            display: flex;
+            line-height: 18px;
+        }
 
     </style>
     <script>
@@ -1980,7 +1983,10 @@
                     <option value="Карткою онлайн">Карткою онлайн</option>
                     
                 </select>
-                
+                <label for="cashback-cart" class="label_cart">Ваш кешбек становить: 113 грн </label>
+                <div class="cash">
+                    Використати кешбек<input type="checkbox" id="cashback-cart">
+                </div>
                 <label for="delivery_method" class="label_cart">Оберіть спосіб доставки</label>
                 <select id="delivery_method" name="delivery_method" class = "delivery_method" onchange = "get_post_office()"> 
                     <option value="Курʼєром Нової пошти">Курʼєром Нової пошти</option>

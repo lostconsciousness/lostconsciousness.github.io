@@ -68,6 +68,7 @@ class Offers(models.Model):
     payment_method = models.CharField(max_length=255,null=True, verbose_name="Спосіб оплати")
     comment = models.TextField(null=True, verbose_name="Коментар")
     products = models.TextField(null = True)
+    offer_id = models.CharField(max_length=255,null=True, verbose_name="Id замовлення")
     class Meta:
         verbose_name = "Замовлення"
         verbose_name_plural = "Замовлення"
